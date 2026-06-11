@@ -1,26 +1,39 @@
 {
-  "name": "icon-api",
-  "version": "0.1.0",
+  "name": "hylab",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "fetch-icons": "npx tsx scripts/fetch-icons.ts"
   },
   "dependencies": {
-    "next": "16.2.9",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "@carbon/icons-react": "^11.82.0",
+    "@heroicons/react": "^2.2.0",
+    "@phosphor-icons/core": "^2.1.1",
+    "@primer/octicons": "^19.28.1",
+    "@tabler/icons": "^3.44.0",
+    "boxicons": "^2.1.4",
+    "css.gg": "^2.1.4",
+    "iconoir": "^7.11.0",
+    "lucide-static": "^1.17.0",
+    "next": "^16.2.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remixicon": "^4.9.1",
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.9",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^16.2.9",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   }
 }
