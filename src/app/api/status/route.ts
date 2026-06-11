@@ -8,7 +8,7 @@ export async function GET() {
   for (let i = 0; i < 5; i++) {
     const start = Date.now();
     try {
-      const res = await fetch('http://localhost:3000/api/icons/home', {
+      const res = await fetch('https://hylab.vercel.app/api/icons/home', {
         cache: 'no-store',
         signal: AbortSignal.timeout(5000),
       });

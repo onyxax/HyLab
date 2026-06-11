@@ -55,7 +55,7 @@ export default function Home() {
   }, [searchQuery, handleSearch]);
 
   const copyIcon = (name: string) => {
-    navigator.clipboard.writeText(`http://localhost:3000/api/icons/${name}`);
+    navigator.clipboard.writeText(`https://hylab.vercel.app/api/icons/${name}`);
     setCopiedIcon(name);
     setTimeout(() => setCopiedIcon(null), 1200);
   };
@@ -106,7 +106,7 @@ export default function Home() {
               </div>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText('curl "http://localhost:3000/api/icons/home?color=7c9a82&size=24"');
+                  navigator.clipboard.writeText('curl "https://hylab.vercel.app/api/icons/home?color=7c9a82&size=24"');
                 }}
                 className="text-xs text-text-muted hover:text-accent transition-colors font-[family-name:var(--font-jetbrains)]"
               >
@@ -117,7 +117,7 @@ export default function Home() {
               <code className="text-sm font-[family-name:var(--font-jetbrains)]">
                 <span className="text-accent">$</span>{' '}
                 <span className="text-[#98c379]">curl</span>{' '}
-                <span className="text-text-primary">"localhost:3000/api/icons/home</span>
+                <span className="text-text-primary">"hylab.vercel.app/api/icons/home</span>
                 <span className="text-[#e5c07b]">?color=7c9a82&amp;size=24</span>
                 <span className="text-text-primary">"</span>
               </code>
@@ -243,7 +243,7 @@ export default function Home() {
               </div>
               <pre className="p-4">
                 <code className="text-sm">{`<img
-  src="http://localhost:3000/api/icons/home
+  src="https://hylab.vercel.app/api/icons/home
     ?color=7c9a82&size=24"
   alt="Home"
 />`}</code>
@@ -257,7 +257,7 @@ export default function Home() {
               <pre className="p-4">
                 <code className="text-sm">{`const Icon = ({ name }) => (
   <img
-    src={\`http://localhost:3000/api/icons/\${name}\`}
+    src={\`https://hylab.vercel.app/api/icons/\${name}\`}
     alt={name}
   />
 );`}</code>

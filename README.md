@@ -10,10 +10,10 @@
 
 <br/>
 
-<a href="https://vercel.com/new/clone?repository-url=https://github.com"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
-<a href="https://github.com"><img src="https://img.shields.io/badge/deploy-%E2%9A%99%EF%B8%8F%20vercel-7c9a82?style=for-the-badge&labelColor=2c2825" alt="Vercel" /></a>
-<a href="https://github.com"><img src="https://img.shields.io/badge/license-MIT-7c9a82?style=for-the-badge&labelColor=2c2825" alt="MIT License" /></a>
-<a href="https://github.com"><img src="https://img.shields.io/badge/18%2C039%20icons-free-7c9a82?style=for-the-badge&labelColor=2c2825" alt="18039 Icons" /></a>
+<a href="https://vercel.com/new/clone?repository-url=https://github.com/onyxax/HyLab"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
+<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/deploy-%E2%9A%99%EF%B8%8F%20vercel-7c9a82?style=for-the-badge&labelColor=2c2825" alt="Vercel" /></a>
+<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/license-MIT-7c9a82?style=for-the-badge&labelColor=2c2825" alt="MIT License" /></a>
+<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/18%2C039%20icons-free-7c9a82?style=for-the-badge&labelColor=2c2825" alt="18039 Icons" /></a>
 
 <br/>
 
@@ -317,7 +317,7 @@ icons = res.json()["data"]
 
 ```bash
 # Clone
-git clone https://github.com
+git clone https://github.com/onyxax/HyLab.git
 cd icon-api
 
 # Install
@@ -339,7 +339,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-[MIT](https://github.com) — use freely in personal and commercial projects.
+[MIT](https://github.com/onyxax/HyLab/blob/master/LICENSE) — use freely in personal and commercial projects.
 
 ---
 

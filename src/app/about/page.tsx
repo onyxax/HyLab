@@ -116,7 +116,7 @@ export default function AboutPage() {
               </div>
               <pre className="p-4 text-sm">
                 <code>{`# Fork & clone
-git clone https://github.com/your-name/hylab.git
+git clone https://github.com/onyxax/HyLab.git
 
 # Install dependencies
 npm install

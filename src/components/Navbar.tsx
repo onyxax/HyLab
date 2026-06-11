@@ -68,7 +68,7 @@ export function Navbar() {
           {/* Right */}
           <div className="flex items-center gap-2 pr-2">
             <a
-              href="https://github.com"
+              href="https://github.com/onyxax/HyLab"
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-xl flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-secondary/80 transition-all duration-200"

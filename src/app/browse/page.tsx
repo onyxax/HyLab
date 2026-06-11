@@ -95,7 +95,7 @@ export default function BrowsePage() {
     setTimeout(() => setCopiedIcon(null), 1200);
   };
 
-  const iconUrl = (name: string) => `http://localhost:3000/api/icons/${name}?color=${previewColor}&size=${previewSize}&format=${format}`;
+  const iconUrl = (name: string) => `https://hylab.vercel.app/api/icons/${name}?color=${previewColor}&size=${previewSize}&format=${format}`;
 
   const getSnippet = () => {
     if (!selectedIcon) return '';
