@@ -72,7 +72,7 @@ const customizationParams = [
 const codeExamples = [
   {
     title: 'HTML',
-    code: '<img src="https://your-domain.vercel.app/api/icons/home?color=7c9a82&size=32" alt="Home" />',
+    code: '<img src="https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32" alt="Home" />',
   },
   {
     title: 'React',
@@ -107,7 +107,7 @@ const codeExamples = [
       '  const size = url.searchParams.get("size") || "24";',
       '',
       '  const res = await fetch(',
-      '    `https://your-domain.vercel.app/api/icons/${params.name}?color=${color}&size=${size}`',
+      '    `https://hylab.vercel.app/api/icons/${params.name}?color=${color}&size=${size}`',
       '  );',
       '',
       '  return new NextResponse(await res.blob(), {',
@@ -171,19 +171,19 @@ const codeExamples = [
     title: 'cURL',
     code: [
       '# Get SVG',
-      'curl "https://your-domain.vercel.app/api/icons/home?color=7c9a82"',
+      'curl "https://hylab.vercel.app/api/icons/home?color=7c9a82"',
       '',
       '# Get PNG',
-      'curl "https://your-domain.vercel.app/api/icons/home?format=png&size=64"',
+      'curl "https://hylab.vercel.app/api/icons/home?format=png&size=64"',
       '',
       '# Search',
-      'curl "https://your-domain.vercel.app/api/icons/search?q=arrow"',
+      'curl "https://hylab.vercel.app/api/icons/search?q=arrow"',
       '',
       '# List categories',
-      'curl "https://your-domain.vercel.app/api/icons/categories"',
+      'curl "https://hylab.vercel.app/api/icons/categories"',
       '',
       '# List icon sets',
-      'curl "https://your-domain.vercel.app/api/icons/sets"',
+      'curl "https://hylab.vercel.app/api/icons/sets"',
     ].join('\n'),
   },
   {
@@ -193,21 +193,21 @@ const codeExamples = [
       '',
       '# Get a single icon',
       'res = requests.get(',
-      '    "https://your-domain.vercel.app/api/icons/home",',
+      '    "https://hylab.vercel.app/api/icons/home",',
       '    params={"color": "7c9a82", "size": "32"}',
       ')',
       'svg_content = res.text',
       '',
       '# Search icons',
       'res = requests.get(',
-      '    "https://your-domain.vercel.app/api/icons/search",',
+      '    "https://hylab.vercel.app/api/icons/search",',
       '    params={"q": "arrow"}',
       ')',
       'icons = res.json()["data"]',
       '',
       '# Get PNG',
       'res = requests.get(',
-      '    "https://your-domain.vercel.app/api/icons/home",',
+      '    "https://hylab.vercel.app/api/icons/home",',
       '    params={"format": "png", "size": "64"}',
       ')',
       'with open("icon.png", "wb") as f:',
@@ -284,9 +284,9 @@ export default function DocsPage() {
             <h2 className="text-xl font-bold font-[family-name:var(--font-outfit)] mb-5">Quick Start</h2>
             <div className="space-y-4">
               {[
-                { step: '1', title: 'Get an icon', desc: 'Fetch any icon by its name', url: 'https://your-domain.vercel.app/api/icons/home' },
-                { step: '2', title: 'Customize it', desc: 'Add color, size, and format parameters', url: 'https://your-domain.vercel.app/api/icons/home?color=7c9a82&size=32&format=svg' },
-                { step: '3', title: 'Use it', desc: 'Drop it into your HTML, React, or any framework', code: '<img src="https://your-domain.vercel.app/api/icons/home?color=7c9a82" alt="Home" />' },
+                { step: '1', title: 'Get an icon', desc: 'Fetch any icon by its name', url: 'https://hylab.vercel.app/api/icons/home' },
+                { step: '2', title: 'Customize it', desc: 'Add color, size, and format parameters', url: 'https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32&format=svg' },
+                { step: '3', title: 'Use it', desc: 'Drop it into your HTML, React, or any framework', code: '<img src="https://hylab.vercel.app/api/icons/home?color=7c9a82" alt="Home" />' },
               ].map((item, i) => (
                 <div key={i} className="card">
                   <div className="flex items-center gap-3 mb-2">
@@ -392,11 +392,11 @@ export default function DocsPage() {
                   <div className="code-block">
                     <div className="flex items-center justify-between px-4 py-2 border-b border-border-primary">
                       <span className="text-xs text-text-muted font-[family-name:var(--font-jetbrains)]">EXAMPLE</span>
-                      <button onClick={() => copy('https://your-domain.vercel.app' + ep.example, 'ep' + i)} className="text-xs text-text-muted hover:text-accent transition-colors">
+                      <button onClick={() => copy('https://hylab.vercel.app' + ep.example, 'ep' + i)} className="text-xs text-text-muted hover:text-accent transition-colors">
                         {copied === 'ep' + i ? 'Copied!' : 'Copy'}
                       </button>
                     </div>
-                    <pre className="p-4"><code className="text-sm text-text-secondary">{'https://your-domain.vercel.app' + ep.example}</code></pre>
+                    <pre className="p-4"><code className="text-sm text-text-secondary">{'https://hylab.vercel.app' + ep.example}</code></pre>
                   </div>
                 </div>
               ))}
