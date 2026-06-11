@@ -1,5 +1,5 @@
 import { IconCategory, IconSet, OutputFormat } from '@/types';
-import iconsData from '@/data/icons.json';
+import iconsData from '../data/icons.json';
 
 const icons = iconsData as Array<{
   name: string;
