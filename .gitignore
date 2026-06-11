@@ -30,9 +30,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# icons data (generated)
-src/data/icons.json
-
 # logs
 logs/
 *.log
