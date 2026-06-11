@@ -515,6 +515,150 @@ export default function DocsPage() {
             </section>
           )}
 
+          {/* AI Agent Prompt */}
+          <section className="mt-14">
+            <div className="card">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold font-[family-name:var(--font-outfit)]">AI Agent Prompt</h3>
+                  <p className="text-xs text-text-muted">Copy this prompt to any AI coding assistant</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-text-secondary mb-4">
+                Use this prompt to teach any AI agent (Cursor, Copilot, Windsurf, Claude, etc.) how to fetch and use icons from HyLab API in your project.
+              </p>
+
+              <div className="code-block">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-border-primary">
+                  <span className="text-xs text-text-muted font-[family-name:var(--font-jetbrains)]">SYSTEM PROMPT</span>
+                  <button
+                    onClick={() => copy(`You are an AI coding assistant that helps developers integrate icons into their projects using the HyLab Icons API.
+
+## HyLab API Reference
+
+Base URL: https://hylab.vercel.app
+
+### Endpoints
+
+1. **Get Icon by Name**
+   GET /api/icons/:name
+   - color (query): Hex color without # (e.g., 7c9a82)
+   - size (query): Size in pixels 1-512 (default: 24)
+   - stroke (query): Stroke width 0.5-4 (default: 2)
+   - format (query): svg, png, or webp (default: svg)
+   - fill (query): true/false - fill icon instead of stroke
+
+2. **Search Icons**
+   GET /api/icons/search?q=keyword
+   Returns icons matching name, tags, or category.
+
+3. **List Categories**
+   GET /api/icons/categories
+
+4. **List Icon Sets**
+   GET /api/icons/sets
+
+5. **List All Icons (Paginated)**
+   GET /api/icons?page=1&limit=50&category=navigation
+
+### How to Use
+
+When a developer asks for an icon:
+1. Search for the icon using /api/icons/search?q={keyword}
+2. Return the full URL: https://hylab.vercel.app/api/icons/{name}?color={color}&size={size}
+3. For HTML: <img src="URL" alt="name" />
+4. For React/Next.js: Use fetch() or <img> tag with the URL
+5. For CSS background: url('URL')
+
+### Example Responses
+
+Developer: "I need a home icon"
+Response: https://hylab.vercel.app/api/icons/home?color=7c9a82&size=24
+
+Developer: "Add a search icon to my navbar"
+Response: Use this in your component:
+<img src="https://hylab.vercel.app/api/icons/search?color=ffffff&size=20" alt="Search" />
+
+Developer: "I need a red heart icon in PNG format"
+Response: https://hylab.vercel.app/api/icons/heart?color=ef4444&size=48&format=png
+
+### Available Categories
+navigation, action, communication, social, files, media, interface, status, commerce, charts, layout, development, weather, miscellaneous
+
+Always provide the complete, working URL. Never use placeholder domains.`, 'ai-prompt')}
+                  >
+                    {copied === 'ai-prompt' ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+                <pre className="p-4 overflow-x-auto"><code className="text-sm text-text-secondary whitespace-pre-wrap">{`You are an AI coding assistant that helps developers integrate icons into their projects using the HyLab Icons API.
+
+## HyLab API Reference
+
+Base URL: https://hylab.vercel.app
+
+### Endpoints
+
+1. **Get Icon by Name**
+   GET /api/icons/:name
+   - color (query): Hex color without # (e.g., 7c9a82)
+   - size (query): Size in pixels 1-512 (default: 24)
+   - stroke (query): Stroke width 0.5-4 (default: 2)
+   - format (query): svg, png, or webp (default: svg)
+   - fill (query): true/false - fill icon instead of stroke
+
+2. **Search Icons**
+   GET /api/icons/search?q=keyword
+   Returns icons matching name, tags, or category.
+
+3. **List Categories**
+   GET /api/icons/categories
+
+4. **List Icon Sets**
+   GET /api/icons/sets
+
+5. **List All Icons (Paginated)**
+   GET /api/icons?page=1&limit=50&category=navigation
+
+### How to Use
+
+When a developer asks for an icon:
+1. Search for the icon using /api/icons/search?q={keyword}
+2. Return the full URL: https://hylab.vercel.app/api/icons/{name}?color={color}&size={size}
+3. For HTML: <img src="URL" alt="name" />
+4. For React/Next.js: Use fetch() or <img> tag with the URL
+5. For CSS background: url('URL')
+
+### Example Responses
+
+Developer: "I need a home icon"
+Response: https://hylab.vercel.app/api/icons/home?color=7c9a82&size=24
+
+Developer: "Add a search icon to my navbar"
+Response: Use this in your component:
+<img src="https://hylab.vercel.app/api/icons/search?color=ffffff&size=20" alt="Search" />
+
+Developer: "I need a red heart icon in PNG format"
+Response: https://hylab.vercel.app/api/icons/heart?color=ef4444&size=48&format=png
+
+### Available Categories
+navigation, action, communication, social, files, media, interface, status, commerce, charts, layout, development, weather, miscellaneous
+
+Always provide the complete, working URL. Never use placeholder domains.`}</code></pre>
+              </div>
+
+              <div className="mt-4 p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <p className="text-xs text-purple-400 font-medium mb-1">Pro Tip</p>
+                <p className="text-xs text-text-secondary">Add this prompt to your project's <code className="text-accent">.cursorrules</code>, <code className="text-accent">AGENTS.md</code>, or <code className="text-accent">.github/copilot-instructions.md</code> file so the AI always knows how to use HyLab.</p>
+              </div>
+            </div>
+          </section>
+
           {/* Rate Limits */}
           <section className="mt-14">
             <div className="card">
