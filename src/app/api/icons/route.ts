@@ -1,40 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getAllIcons, getTotalIcons } from '@/lib/icons';
+import { NextRequest } from 'next/server';
+import { listIcons } from '@/domain/icons/service';
+import { parsePage, parseLimit } from '@/lib/api/validation';
+import { jsonSuccess, jsonError } from '@/lib/api/response';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '50');
-  const category = searchParams.get('category') || undefined;
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parsePage(searchParams.get('page'));
+    const limit = parseLimit(searchParams.get('limit'));
+    const category = searchParams.get('category') || undefined;
 
-  let icons = getAllIcons();
+    const { data, meta } = listIcons({ page, limit, category });
 
-  if (category) {
-    icons = icons.filter(icon => icon.category === category);
+    return jsonSuccess(
+      data.map(icon => ({
+        name: icon.name,
+        category: icon.category,
+        tags: icon.tags,
+        svg: icon.svg,
+        source: icon.source,
+      })),
+      meta,
+      { cache: 3600 }
+    );
+  } catch (e) {
+    return jsonError((e as Error).message, 400);
   }
-
-  const total = icons.length;
-  const offset = (page - 1) * limit;
-  const paginatedIcons = icons.slice(offset, offset + limit);
-
-  return NextResponse.json({
-    success: true,
-    data: paginatedIcons.map(icon => ({
-      name: icon.name,
-      category: icon.category,
-      tags: icon.tags,
-      svg: icon.svg,
-    })),
-    meta: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    },
-  }, {
-    headers: {
-      'Cache-Control': 'public, max-age=3600',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
 }

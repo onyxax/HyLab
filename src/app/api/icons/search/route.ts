@@ -1,35 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { searchIcons } from '@/lib/icons';
+import { NextRequest } from 'next/server';
+import { searchIcons } from '@/domain/icons/service';
+import { jsonSuccess, jsonError } from '@/lib/api/response';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const query = searchParams.get('q');
+  const query = (searchParams.get('q') || '').trim();
 
   if (!query) {
-    return NextResponse.json(
-      { success: false, error: 'Query parameter "q" is required' },
-      { status: 400 }
-    );
+    return jsonError('Query parameter "q" is required', 400);
+  }
+
+  if (query.length < 1 || query.length > 100) {
+    return jsonError('Query must be 1-100 characters', 400);
   }
 
   const results = searchIcons(query);
 
-  return NextResponse.json({
-    success: true,
-    data: results.map(icon => ({
+  return jsonSuccess(
+    results.map(icon => ({
       name: icon.name,
       category: icon.category,
       tags: icon.tags,
       svg: icon.svg,
+      source: icon.source,
     })),
-    meta: {
-      total: results.length,
-      query,
-    },
-  }, {
-    headers: {
-      'Cache-Control': 'public, max-age=3600',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+    { total: results.length, query },
+    { cache: 3600 }
+  );
 }

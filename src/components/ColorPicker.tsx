@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { hexToHsl, hslToRgb, rgbToHex, drawColorGrid } from '@/lib/color/color';
 
 interface ColorPickerProps {
   value: string;
@@ -11,69 +12,6 @@ const PRESETS = [
   '7c9a82', '3b82f6', 'ef4444', 'f59e0b', '8b5cf6', 'ec4899', '2c2825', 'f0ece6',
   '10b981', '06b6d4', 'f97316', '84cc16', 'a855f7', 'e11d48', '64748b', 'ffffff',
 ];
-
-function hexToHsl(hex: string): [number, number, number] {
-  let r = parseInt(hex.slice(0, 2), 16) / 255;
-  let g = parseInt(hex.slice(2, 4), 16) / 255;
-  let b = parseInt(hex.slice(4, 6), 16) / 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s = 0;
-  const l = (max + min) / 2;
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-    else if (max === g) h = ((b - r) / d + 2) / 6;
-    else h = ((r - g) / d + 4) / 6;
-  }
-  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
-}
-
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-  h /= 360; s /= 100; l /= 100;
-  if (s === 0) { const v = Math.round(l * 255); return [v, v, v]; }
-  const hue2rgb = (p: number, q: number, t: number) => {
-    if (t < 0) t += 1; if (t > 1) t -= 1;
-    if (t < 1/6) return p + (q - p) * 6 * t;
-    if (t < 1/2) return q;
-    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-    return p;
-  };
-  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-  const p = 2 * l - q;
-  return [
-    Math.round(hue2rgb(p, q, h + 1/3) * 255),
-    Math.round(hue2rgb(p, q, h) * 255),
-    Math.round(hue2rgb(p, q, h - 1/3) * 255),
-  ];
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
-}
-
-function drawGrid(canvas: HTMLCanvasElement, hue: number) {
-  const ctx = canvas.getContext('2d')!;
-  const w = canvas.width;
-  const h = canvas.height;
-  const imageData = ctx.createImageData(w, h);
-  const data = imageData.data;
-
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const s = (x / (w - 1)) * 100;
-      const l = (1 - y / (h - 1)) * 100;
-      const [r, g, b] = hslToRgb(hue, s, l);
-      const i = (y * w + x) * 4;
-      data[i] = r;
-      data[i + 1] = g;
-      data[i + 2] = b;
-      data[i + 3] = 255;
-    }
-  }
-
-  ctx.putImageData(imageData, 0, 0);
-}
 
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   const [open, setOpen] = useState(false);
@@ -98,7 +36,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
 
   useEffect(() => {
     if (open && canvasRef.current) {
-      drawGrid(canvasRef.current, hueRef.current);
+      drawColorGrid(canvasRef.current, hueRef.current);
     }
   }, [open]);
 
@@ -143,7 +81,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
     const update = (clientX: number) => {
       const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       hueRef.current = Math.round(x * 360);
-      if (canvasRef.current) drawGrid(canvasRef.current, hueRef.current);
+      if (canvasRef.current) drawColorGrid(canvasRef.current, hueRef.current);
       onChange(rgbToHex(...hslToRgb(hueRef.current, satRef.current, lightRef.current)));
     };
 
@@ -188,7 +126,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
     const update = (clientX: number) => {
       const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       hueRef.current = Math.round(x * 360);
-      if (canvasRef.current) drawGrid(canvasRef.current, hueRef.current);
+      if (canvasRef.current) drawColorGrid(canvasRef.current, hueRef.current);
       onChange(rgbToHex(...hslToRgb(hueRef.current, satRef.current, lightRef.current)));
     };
 
@@ -274,7 +212,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
                   if (s > 0) hueRef.current = h;
                   satRef.current = s;
                   lightRef.current = l;
-                  if (canvasRef.current) drawGrid(canvasRef.current, hueRef.current);
+                  if (canvasRef.current) drawColorGrid(canvasRef.current, hueRef.current);
                   onChange(clean);
                 }
               }}
@@ -292,6 +230,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
                   if (s > 0) hueRef.current = h;
                   satRef.current = s;
                   lightRef.current = l;
+                  if (canvasRef.current) drawColorGrid(canvasRef.current, hueRef.current);
                   onChange(c);
                 }}
                 className={`w-5 h-5 rounded-full border transition-all ${

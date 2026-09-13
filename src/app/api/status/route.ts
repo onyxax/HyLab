@@ -29,10 +29,18 @@ export async function GET() {
   const avgMs = Math.round(checks.reduce((a, c) => a + c.ms, 0) / checks.length);
   const allOk = checks.every(c => c.ok);
 
-  return NextResponse.json({
-    status: allOk ? 'operational' : 'degraded',
-    avgResponseTime: avgMs,
-    checks,
-    timestamp: now,
-  });
+  return NextResponse.json(
+    {
+      status: allOk ? 'operational' : 'degraded',
+      avgResponseTime: avgMs,
+      checks,
+      timestamp: now,
+    },
+    {
+      headers: {
+        'Cache-Control': 'no-store',
+        'Access-Control-Allow-Origin': '*',
+      },
+    }
+  );
 }

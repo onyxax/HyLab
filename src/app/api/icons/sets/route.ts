@@ -1,19 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getSets } from '@/lib/icons';
+import { getSets } from '@/domain/icons/service';
+import { jsonSuccess } from '@/lib/api/response';
 
 export async function GET() {
   const sets = getSets();
-
-  return NextResponse.json({
-    success: true,
-    data: sets,
-    meta: {
-      total: sets.length,
-    },
-  }, {
-    headers: {
-      'Cache-Control': 'public, max-age=3600',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+  return jsonSuccess(sets, { total: sets.length }, { cache: 3600 });
 }

@@ -1,61 +1,23 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import { useCategories } from '@/hooks/useCategories';
+import { useIcons } from '@/hooks/useIcons';
+import { CategoryFilterCompact } from '@/components/icons/CategoryFilter';
+import { buildIconUrl } from '@/lib/api/client';
 
 export default function Home() {
   useScrollToTop();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [icons, setIcons] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { categories } = useCategories();
+  const { icons, category, setCategory, search, setSearch, loading } = useIcons({ limit: 36 });
   const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
-  const [categories, setCategories] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    fetchIcons();
-  }, [selectedCategory]);
-
-  const fetchCategories = async () => {
-    const res = await fetch('/api/icons/categories');
-    const data = await res.json();
-    setCategories(data.data || []);
-  };
-
-  const fetchIcons = async () => {
-    setLoading(true);
-    const url = selectedCategory
-      ? `/api/icons?category=${selectedCategory}&limit=36`
-      : '/api/icons?limit=36';
-    const res = await fetch(url);
-    const data = await res.json();
-    setIcons(data.data || []);
-    setLoading(false);
-  };
-
-  const handleSearch = useCallback(async () => {
-    if (!searchQuery.trim()) { fetchIcons(); return; }
-    setLoading(true);
-    const res = await fetch(`/api/icons/search?q=${searchQuery}`);
-    const data = await res.json();
-    setIcons(data.data || []);
-    setLoading(false);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    const t = setTimeout(() => { if (searchQuery) handleSearch(); }, 300);
-    return () => clearTimeout(t);
-  }, [searchQuery, handleSearch]);
 
   const copyIcon = (name: string) => {
-    navigator.clipboard.writeText(`https://hylab.vercel.app/api/icons/${name}`);
+    navigator.clipboard.writeText(buildIconUrl(name, {}));
     setCopiedIcon(name);
     setTimeout(() => setCopiedIcon(null), 1200);
   };
@@ -66,7 +28,6 @@ export default function Home() {
 
       {/* ─── Hero ─────────────────────────────────── */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Background decoration */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl" />
           <div className="absolute top-40 left-1/4 w-[300px] h-[300px] bg-accent/3 rounded-full blur-3xl" />
@@ -93,7 +54,6 @@ export default function Home() {
             <Link href="/browse" className="btn btn-secondary">Browse Icons</Link>
           </div>
 
-          {/* Code Preview */}
           <div className="code-block text-left max-w-lg mx-auto">
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-primary">
               <div className="flex items-center gap-2">
@@ -152,7 +112,6 @@ export default function Home() {
             <p className="text-text-secondary">Click any icon to copy its URL</p>
           </div>
 
-          {/* Search */}
           <div className="max-w-md mx-auto mb-8">
             <div className="relative">
               <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -161,36 +120,17 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search 18,000+ icons..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-primary bg-bg-card text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all"
               />
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
             </div>
           </div>
 
-          {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${!selectedCategory ? 'bg-accent text-white' : 'text-text-secondary hover:text-text-primary border border-border-primary hover:border-border-hover'}`}
-            >
-              All
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selectedCategory === cat.id ? 'bg-accent text-white' : 'text-text-secondary hover:text-text-primary border border-border-primary hover:border-border-hover'}`}
-              >
-                {cat.name}
-              </button>
-            ))}
+          <div className="flex justify-center mb-8">
+            <CategoryFilterCompact categories={categories} selected={category} onSelect={setCategory} />
           </div>
 
-          {/* Icons Grid */}
           <div className="bg-bg-card border border-border-primary rounded-2xl p-5">
             {loading ? (
               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 gap-3">
@@ -210,7 +150,6 @@ export default function Home() {
                       className="w-6 h-6 text-text-secondary group-hover:text-accent transition-colors duration-200 [&_svg]:w-full [&_svg]:h-full"
                       dangerouslySetInnerHTML={{ __html: icon.svg }}
                     />
-                    {/* Tooltip */}
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-text-primary text-bg-primary text-[10px] rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-medium">
                       {copiedIcon === icon.name ? '✓ Copied' : icon.name}
                     </div>
@@ -220,9 +159,7 @@ export default function Home() {
             )}
           </div>
 
-          <p className="text-center text-xs text-text-muted mt-4">
-            Click any icon to copy its API URL
-          </p>
+          <p className="text-center text-xs text-text-muted mt-4">Click any icon to copy its API URL</p>
         </div>
       </section>
 
@@ -278,7 +215,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Footer ───────────────────────────────── */}
       <Footer />
     </div>
   );
