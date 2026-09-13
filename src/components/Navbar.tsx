@@ -23,7 +23,7 @@ export function Navbar() {
         {/* Glow effect behind */}
         <div className="absolute -inset-1 bg-gradient-to-r from-accent/10 via-accent/5 to-accent/10 rounded-2xl blur-xl opacity-60" />
 
-        <div className="relative flex items-center justify-between h-[68px] px-2 bg-bg-primary/80 backdrop-blur-2xl border border-border-primary/50 rounded-2xl shadow-lg shadow-black/5">
+        <div className="relative flex items-center justify-between h-[64px] px-2 bg-bg-primary/75 backdrop-blur-[20px] backdrop-saturate-150 border border-border-primary/40 rounded-2xl shadow-tinted ring-1 ring-white/[0.04] dark:ring-white/[0.02]">
           {/* Logo */}
           <Link href="/" scroll={false} className="flex items-center gap-3 pl-3 pr-4 group">
             <img src="/favicon.svg" alt="HyLab" className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" />

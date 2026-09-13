@@ -45,12 +45,18 @@ export default function BrowsePage() {
     <div className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
 
-      <section className="pt-24 pb-6 px-6">
+      <section className="relative pt-24 pb-8 px-6 overflow-hidden">
+        <div className="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.05]">
+          <img src="https://picsum.photos/seed/hylab-browse/1600/600" alt="" aria-hidden="true" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary/70 to-bg-primary" />
+        </div>
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-outfit)] tracking-tight mb-3">Browse Icons</h1>
-          <p className="text-text-secondary text-lg mb-8">
-            {totalAllIcons.toLocaleString()} icons across {categories.length} categories
-          </p>
+          <div className="max-w-3xl">
+            <h1 className="text-[34px] md:text-[44px] font-bold font-[family-name:var(--font-outfit)] tracking-[-0.025em] leading-[0.95] mb-3 text-wrap-balance">Browse Icons</h1>
+            <p className="text-text-secondary mb-8">
+              <span className="tabular font-medium text-text-primary">{totalAllIcons.toLocaleString()}</span> icons across <span className="tabular">{categories.length}</span> categories — click to preview and copy.
+            </p>
+          </div>
 
           <div className="max-w-xl mb-6">
             <SearchInput

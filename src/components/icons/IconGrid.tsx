@@ -52,14 +52,19 @@ export function IconGrid({
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
       {icons.map((icon, i) => (
-        <IconCard
+        <div
           key={`${icon.name}-${i}`}
-          icon={icon}
-          selected={selectedName === icon.name}
-          copied={copiedName === icon.name}
-          onSelect={onSelect}
-          onCopy={onCopy}
-        />
+          className="animate-fade-up"
+          style={{ animationDelay: `${Math.min(i * 12, 180)}ms`, animationFillMode: 'both' }}
+        >
+          <IconCard
+            icon={icon}
+            selected={selectedName === icon.name}
+            copied={copiedName === icon.name}
+            onSelect={onSelect}
+            onCopy={onCopy}
+          />
+        </div>
       ))}
     </div>
   );

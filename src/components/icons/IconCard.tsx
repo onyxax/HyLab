@@ -26,8 +26,8 @@ export function IconCard({
   return (
     <button
       onClick={() => (onSelect ? onSelect(icon) : onCopy?.(icon.name))}
-      className={`group relative aspect-square rounded-xl border bg-bg-card hover:bg-accent-light flex items-center justify-center p-3 transition-all duration-200 cursor-pointer ${
-        selected ? 'border-accent bg-accent-light ring-2 ring-accent/20' : 'border-border-primary hover:border-accent'
+      className={`group relative aspect-square rounded-[14px] border bg-bg-card hover:bg-accent-light flex items-center justify-center p-3 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 active:scale-[0.98] ${
+        selected ? 'border-accent bg-accent-light ring-2 ring-accent/20' : 'border-border-primary hover:border-accent shadow-sm hover:shadow-tinted hover:-translate-y-[1px]'
       }`}
     >
       <div
