@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
+import { CACHE, API } from '@/domain/icons/constants';
 
 type SuccessMeta = Record<string, unknown>;
 
-const CORS_HEADERS = { 'Access-Control-Allow-Origin': '*' } as const;
+// المركز الوحيد لـ CORS/Cache — أي تغيير هنا يطبق على كل الـ API
+const CORS_HEADERS = { 'Access-Control-Allow-Origin': API.CORS_ORIGIN } as const;
+
+export const CACHE_SECONDS = CACHE;
+export { API as API_CONFIG };
 
 export function jsonSuccess<T>(
   data: T,
@@ -38,7 +43,7 @@ export function jsonError(message: string, status: number, extraHeaders?: Record
   );
 }
 
-export function svgResponse(svg: string, cacheSeconds = 31536000) {
+export function svgResponse(svg: string, cacheSeconds = CACHE.ICON_IMMUTABLE) {
   return new NextResponse(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
@@ -52,7 +57,7 @@ export function binaryResponse(
   buffer: Buffer | Uint8Array,
   contentType: string,
   filename: string,
-  cacheSeconds = 31536000
+  cacheSeconds = CACHE.ICON_IMMUTABLE
 ) {
   return new NextResponse(buffer as unknown as BodyInit, {
     headers: {

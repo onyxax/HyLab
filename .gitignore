@@ -1,35 +1,120 @@
-# dependencies
+# ===============================
+# Dependencies
+# ===============================
 node_modules/
+.pnp/
+.pnp.js
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
 
-# next.js
+# ===============================
+# Next.js
+# ===============================
 .next/
 out/
-
-# production
 build/
 dist/
+.next
+.turbo/
+.cache/
+.parcel-cache/
 
-# misc
-.DS_Store
-*.pem
+# ===============================
+# Production & Env
+# ===============================
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
+*.pem
+*.key
+*.cert
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ===============================
+# Vercel
+# ===============================
+.vercel/
+.now/
 
-# vercel
-.vercel
+# ===============================
+# OpenChamber — local sessions
+# ===============================
+.openchamber/
 
-# typescript
+# ===============================
+# TypeScript
+# ===============================
 *.tsbuildinfo
 next-env.d.ts
 
-# logs
+# ===============================
+# Logs
+# ===============================
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ===============================
+# OS
+# ===============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ===============================
+# Editor / IDE
+# ===============================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# ===============================
+# Testing & Coverage
+# ===============================
+coverage/
+.nyc_output/
+.coverage/
+*.lcov
+junit.xml
+
+# ===============================
+# Misc
+# ===============================
+.cache/
+.eslintcache
+.stylelintcache
+tmp/
+temp/
+*.tmp
+*.temp
+.DS_Store
+
+# ===============================
+# Generated data — do not commit large JSON
+# ===============================
+src/data/external-icons.json
+
+# ===============================
+# Public — ignore local screenshots if added
+# ===============================
+# public/screenshots/*  — keep tracked, uncomment to ignore

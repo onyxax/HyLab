@@ -17,6 +17,7 @@
     "@tabler/icons": "^3.44.0",
     "boxicons": "^2.1.4",
     "css.gg": "^2.1.4",
+    "gif-encoder-2": "^1.0.5",
     "iconoir": "^7.11.0",
     "lucide-static": "^1.17.0",
     "next": "^16.2.9",

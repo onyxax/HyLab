@@ -4,6 +4,7 @@ import { customizeSvg } from '@/domain/icons/transforms/customizeSvg';
 import { convertSvgToFormat, getMimeType, getFileExtension } from '@/domain/icons/transforms/convertFormat';
 import { parseIconQuery } from '@/lib/api/validation';
 import { jsonError, svgResponse, binaryResponse } from '@/lib/api/response';
+import { ICON_SIZE } from '@/domain/icons/constants';
 
 export async function GET(
   request: NextRequest,
@@ -40,7 +41,7 @@ export async function GET(
   }
 
   try {
-    const buffer = await convertSvgToFormat(customizedSvg, query.format, query.size || 24);
+    const buffer = await convertSvgToFormat(customizedSvg, query.format, query.size || ICON_SIZE.DEFAULT);
     return binaryResponse(
       buffer,
       getMimeType(query.format),

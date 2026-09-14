@@ -2,9 +2,17 @@
 
 import { IconCard, IconCardData } from './IconCard';
 
-export function IconGridSkeleton({ count = 48 }: { count?: number }) {
+type GridVariant = 'default' | 'compact' | 'browse';
+
+const GRID_CLASSES: Record<GridVariant, string> = {
+  default: 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3',
+  compact: 'grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 gap-3',
+  browse: 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3',
+};
+
+export function IconGridSkeleton({ count = 48, variant = 'default' }: { count?: number; variant?: GridVariant }) {
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+    <div className={GRID_CLASSES[variant]}>
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="aspect-square skeleton rounded-xl" />
       ))}
@@ -38,6 +46,7 @@ export function IconGrid({
   onSelect,
   onCopy,
   skeletonCount = 48,
+  variant = 'default',
 }: {
   icons: IconCardData[];
   loading: boolean;
@@ -46,25 +55,21 @@ export function IconGrid({
   onSelect?: (icon: IconCardData) => void;
   onCopy?: (name: string) => void;
   skeletonCount?: number;
+  variant?: GridVariant;
 }) {
-  if (loading) return <IconGridSkeleton count={skeletonCount} />;
+  if (loading) return <IconGridSkeleton count={skeletonCount} variant={variant} />;
   if (icons.length === 0) return <IconGridEmpty />;
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+    <div className={GRID_CLASSES[variant]}>
       {icons.map((icon, i) => (
-        <div
+        <IconCard
           key={`${icon.name}-${i}`}
-          className="animate-fade-up"
-          style={{ animationDelay: `${Math.min(i * 12, 180)}ms`, animationFillMode: 'both' }}
-        >
-          <IconCard
-            icon={icon}
-            selected={selectedName === icon.name}
-            copied={copiedName === icon.name}
-            onSelect={onSelect}
-            onCopy={onCopy}
-          />
-        </div>
+          icon={icon}
+          selected={selectedName === icon.name}
+          copied={copiedName === icon.name}
+          onSelect={onSelect}
+          onCopy={onCopy}
+        />
       ))}
     </div>
   );

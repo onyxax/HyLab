@@ -7,16 +7,21 @@ import iconsData from '@/data/icons.json';
 let _all: Icon[] | null = null;
 let _byName: Map<string, Icon> | null = null;
 let _byCategory: Map<string, Icon[]> | null = null;
+let _bySource: Map<string, Icon[]> | null = null;
 
 function ensureLoaded(): Icon[] {
   if (!_all) {
     _all = iconsData as Icon[];
     _byName = new Map(_all.map(i => [i.name, i]));
     _byCategory = new Map();
+    _bySource = new Map();
     for (const icon of _all) {
       const list = _byCategory.get(icon.category);
       if (list) list.push(icon);
       else _byCategory.set(icon.category, [icon]);
+      const sList = _bySource.get(icon.source);
+      if (sList) sList.push(icon);
+      else _bySource.set(icon.source, [icon]);
     }
   }
   return _all!;
@@ -34,6 +39,11 @@ export function getIconByName(name: string): Icon | undefined {
 export function getIconsByCategory(category: string): Icon[] {
   ensureLoaded();
   return _byCategory!.get(category) ?? [];
+}
+
+export function getIconsBySource(source: string): Icon[] {
+  ensureLoaded();
+  return _bySource!.get(source) ?? [];
 }
 
 export function searchIcons(query: string): Icon[] {
@@ -58,4 +68,5 @@ export function __clearCache() {
   _all = null;
   _byName = null;
   _byCategory = null;
+  _bySource = null;
 }

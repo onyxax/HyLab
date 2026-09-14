@@ -1,231 +1,259 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ColorPicker } from '@/components/ColorPicker';
 import { IconCardData } from './IconCard';
 import { buildIconUrl } from '@/lib/api/client';
+import { customizeSvg } from '@/domain/icons/transforms/customizeSvg';
 
-function getPreviewSvg(icon: IconCardData, color: string, size: number) {
-  const displaySize = Math.min(size, 128);
-  let svg = icon.svg;
-  if (svg.includes('width=')) {
-    svg = svg.replace(/width="[^"]*"/g, `width="${displaySize}"`);
-  } else {
-    svg = svg.replace('<svg ', `<svg width="${displaySize}" `);
+function getPreviewSvg(icon: IconCardData, color: string, size: number, stroke?: number) {
+  const displaySize = Math.min(size, 256);
+  try {
+    return customizeSvg(icon.svg, { color, size: displaySize, strokeWidth: stroke });
+  } catch {
+    // fallback — simple replace
+    let svg = icon.svg;
+    svg = svg.replace(/width="[^"]*"/g, `width="${displaySize}"`).replace(/height="[^"]*"/g, `height="${displaySize}"`);
+    svg = svg.replace(/stroke="currentColor"/gi, `stroke="#${color}"`).replace(/fill="currentColor"/gi, `fill="#${color}"`);
+    return svg;
   }
-  if (svg.includes('height=')) {
-    svg = svg.replace(/height="[^"]*"/g, `height="${displaySize}"`);
-  } else {
-    svg = svg.replace('<svg ', `<svg height="${displaySize}" `);
-  }
-  svg = svg.replace(/stroke="currentColor"/g, `stroke="#${color}"`);
-  svg = svg.replace(/fill="currentColor"/g, `fill="#${color}"`);
-  return svg;
 }
 
-export function IconPreviewModal({
-  icon,
-  onClose,
-}: {
-  icon: IconCardData | null;
-  onClose: () => void;
-}) {
+export function IconPreviewModal({ icon, onClose }: { icon: IconCardData | null; onClose: () => void }) {
   const [previewColor, setPreviewColor] = useState('7c9a82');
   const [previewSize, setPreviewSize] = useState(48);
-  const [copiedSnippet, setCopiedSnippet] = useState(false);
-  const [copiedUrl, setCopiedUrl] = useState(false);
-  const [codeTab, setCodeTab] = useState('html');
+  const [previewStroke, setPreviewStroke] = useState(2);
   const [format, setFormat] = useState<'svg' | 'png' | 'webp'>('svg');
-  const [formatOpen, setFormatOpen] = useState(false);
-  const formatRef = useRef<HTMLDivElement>(null);
+  const [codeTab, setCodeTab] = useState<'html' | 'react' | 'url'>('html');
+  const [copied, setCopied] = useState<string | null>(null);
+  const [bg, setBg] = useState<'light' | 'dark' | 'check'>('check');
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (formatRef.current && !formatRef.current.contains(e.target as Node)) setFormatOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+    if (!icon) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [icon, onClose]);
+
+  useEffect(() => {
+    if (icon) {
+      setPreviewColor('7c9a82');
+      setPreviewSize(48);
+      setPreviewStroke(2);
+      setFormat('svg');
+      setCodeTab('html');
+    }
+  }, [icon?.name]);
 
   if (!icon) return null;
 
-  const iconUrl = buildIconUrl(icon.name, { color: previewColor, size: previewSize, format });
+  const hasStroke = /stroke/i.test(icon.svg);
+  const iconUrl = buildIconUrl(icon.name, { color: previewColor, size: previewSize, format, stroke: hasStroke ? previewStroke : undefined });
+  const previewSvg = getPreviewSvg(icon, previewColor, previewSize, hasStroke ? previewStroke : undefined);
 
-  const getSnippet = () => {
-    const alt = icon.name;
-    switch (codeTab) {
-      case 'react':
-        return `<img src="${iconUrl}" alt="${alt}" />`;
-      case 'nextjs':
-        return `import Image from 'next/image';\n\n<Image\n  src="${iconUrl}"\n  alt="${alt}"\n  width={${previewSize}}\n  height={${previewSize}}\n/>`;
-      case 'vue':
-        return `<template>\n  <img src="${iconUrl}" alt="${alt}" />\n</template>`;
-      case 'svelte':
-        return `<img src="${iconUrl}" alt="${alt}" />`;
-      default:
-        return `<img src="${iconUrl}" alt="${alt}" />`;
+  const copy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 1200);
+  };
+
+  const download = async () => {
+    try {
+      const res = await fetch(iconUrl);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${icon.name}.${format}`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(iconUrl, '_blank');
     }
   };
 
-  const copyUrl = () => {
-    navigator.clipboard.writeText(iconUrl);
-    setCopiedUrl(true);
-    setTimeout(() => setCopiedUrl(false), 1200);
-  };
+  const snippet = (() => {
+    if (codeTab === 'react') return `<img src="${iconUrl}" alt="${icon.name}" width={${previewSize}} height={${previewSize}} />`;
+    if (codeTab === 'url') return iconUrl;
+    return `<img src="${iconUrl}" alt="${icon.name}" />`;
+  })();
 
-  const copySnippet = () => {
-    navigator.clipboard.writeText(getSnippet());
-    setCopiedSnippet(true);
-    setTimeout(() => setCopiedSnippet(false), 1200);
-  };
+  const bgClass = bg === 'light' ? 'bg-white' : bg === 'dark' ? 'bg-[#0f0f0f]' : 'bg-[repeating-conic-gradient(#e5e0d8_0%_25%,#faf8f5_0%_50%)] bg-[length:16px_16px] dark:bg-[repeating-conic-gradient(#2a2926_0%_25%,#1a1816_0%_50%)]';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true" aria-label={`${icon.name} preview`}>
+      <div className="absolute inset-0 bg-black/50" />
       <div
-        className="relative bg-bg-card border border-border-primary rounded-2xl shadow-2xl w-full max-w-lg animate-in fade-in zoom-in duration-200"
+        className="relative w-full max-w-[860px] max-h-[90vh] rounded-2xl border border-border-primary bg-bg-card shadow-2xl overflow-hidden flex flex-col animate-in fade-in duration-200"
         onClick={e => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-bg-secondary hover:bg-bg-tertiary flex items-center justify-center text-text-muted hover:text-text-primary transition-colors z-10"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="p-8 pb-4 flex items-center justify-center border-b border-border-primary bg-bg-secondary rounded-t-2xl">
-          <div dangerouslySetInnerHTML={{ __html: getPreviewSvg(icon, previewColor, previewSize) }} />
+        {/* Top bar — title + close, no overlap */}
+        <div className="h-10 flex items-center justify-between px-4 border-b border-border-primary bg-bg-card shrink-0">
+          <div className="flex items-center gap-2 text-sm min-w-0">
+            <span className="font-medium truncate">{icon.name}</span>
+            <span className="hidden sm:inline text-text-muted">·</span>
+            <span className="hidden sm:inline text-text-muted truncate">{icon.category}</span>
+            {icon.source && <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded bg-bg-secondary border border-border-primary text-[10px] font-medium">{icon.source}</span>}
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-bg-secondary border border-border-primary flex items-center justify-center text-text-muted hover:text-text-primary hover:border-border-hover transition-colors shrink-0 ml-3"
+            aria-label="Close"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
         </div>
 
-        <div className="p-6 space-y-5">
-          <div>
-            <h3 className="text-xl font-bold font-[family-name:var(--font-outfit)] mb-1">{icon.name}</h3>
-            <div className="flex items-center gap-2 text-sm text-text-muted">
-              {icon.source && <span className="badge badge-accent text-[10px]">{icon.source}</span>}
-              <span>{icon.category}</span>
-              {icon.tags?.length > 0 && (
-                <>
-                  <span>·</span>
-                  <span>{icon.tags.slice(0, 4).join(', ')}</span>
-                </>
-              )}
+        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden min-h-0">
+          {/* Left — preview */}
+          <div className="flex-1 flex flex-col min-h-[260px] lg:min-h-[480px] border-b lg:border-b-0 lg:border-r border-border-primary">
+            <div className="px-4 h-9 flex items-center justify-between border-b border-border-primary bg-bg-secondary shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-text-muted">Preview</span>
+                <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-full bg-bg-card border border-border-primary text-[11px] font-mono tabular text-text-muted">
+                  {previewSize}×{previewSize} · {format.toUpperCase()}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                {(['check', 'light', 'dark'] as const).map(v => (
+                  <button
+                    key={v}
+                    onClick={() => setBg(v)}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${bg === v ? 'border-accent ring-2 ring-accent/20' : 'border-border-primary hover:border-border-hover'}`}
+                    title={v === 'check' ? 'Checkerboard' : v}
+                    style={{ background: v === 'check' ? 'repeating-conic-gradient(#e5e0d8 0% 25%, #faf8f5 0% 50%)' : v === 'light' ? '#fff' : '#0f0f0f' }}
+                  />
+                ))}
+              </div>
             </div>
+
+          <div className={`flex-1 flex items-center justify-center p-8 ${bgClass} relative overflow-hidden`}>
+            <div
+              className="[&_svg]:w-full [&_svg]:h-full drop-shadow-sm"
+              style={{ width: Math.min(previewSize, 256), height: Math.min(previewSize, 256), color: `#${previewColor}` }}
+              dangerouslySetInnerHTML={{ __html: previewSvg }}
+            />
           </div>
 
-          <div className="space-y-4">
+          <div className="px-4 py-3 bg-bg-secondary border-t border-border-primary flex items-center justify-between gap-2 text-xs shrink-0">
+            <div className="flex items-center gap-2 text-text-muted truncate">
+              <span className="hidden sm:inline">Tags:</span>
+              <span className="truncate">{icon.tags?.slice(0, 4).join(' · ') || '—'}</span>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-text-muted tabular">
+              <span className="w-2 h-2 rounded-full" style={{ background: `#${previewColor}` }} />
+              {previewColor.toUpperCase()} · {previewStroke}px
+            </span>
+          </div>
+        </div>
+
+        {/* Right — controls */}
+        <div className="w-full lg:w-[380px] shrink-0 flex flex-col max-h-[50vh] lg:max-h-[520px] overflow-hidden">
+          <div className="flex-1 overflow-y-auto overflow-x-visible p-5 space-y-5 overscroll-contain">
+            {/* Color */}
             <div>
-              <label className="text-xs text-text-muted uppercase tracking-wider mb-1.5 block">Color</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted">Color</label>
+                <span className="text-xs font-mono tabular text-text-muted">#{previewColor.toUpperCase()}</span>
+              </div>
               <div className="flex items-center gap-3">
                 <ColorPicker value={previewColor} onChange={setPreviewColor} />
-                <div className="flex gap-1.5 flex-wrap">
-                  {['7c9a82', '3b82f6', 'ef4444', 'f59e0b', '8b5cf6', 'ec4899', '2c2825', 'f0ece6'].map(c => (
+                <div className="flex gap-1.5 flex-wrap flex-1">
+                  {['7c9a82', '2c2825', '3b82f6', 'ef4444', 'f59e0b', '10b981', '8b5cf6', 'ec4899'].map(c => (
                     <button
                       key={c}
                       onClick={() => setPreviewColor(c)}
-                      className={`w-7 h-7 rounded-full border-2 transition-all shrink-0 ${previewColor === c ? 'border-accent scale-110 ring-2 ring-accent/30' : 'border-transparent hover:scale-105'}`}
+                      className={`w-7 h-7 rounded-full border-2 shrink-0 transition-all ${previewColor === c ? 'border-accent scale-110 ring-2 ring-accent/20' : 'border-white dark:border-bg-card shadow-sm hover:scale-105'}`}
                       style={{ background: `#${c}` }}
+                      aria-label={c}
                     />
                   ))}
                 </div>
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-text-muted uppercase tracking-wider">Size</label>
-                <span className="text-sm font-mono text-text-secondary">{previewSize}px</span>
+
+            {/* Size + Stroke — stroke hidden if icon doesn't support it */}
+            <div className={`grid gap-4 ${hasStroke ? 'grid-cols-2' : 'grid-cols-1'}`}>
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted">Size</label>
+                  <span className="text-xs font-mono tabular">{previewSize}px</span>
+                </div>
+                <input type="range" min={16} max={512} step={8} value={previewSize} onChange={e => setPreviewSize(Number(e.target.value))} className="w-full h-1.5 bg-bg-secondary rounded-full appearance-none cursor-pointer accent-accent" />
               </div>
-              <input
-                type="range"
-                min={16}
-                max={512}
-                value={previewSize}
-                onChange={e => setPreviewSize(Number(e.target.value))}
-                className="w-full h-1.5 bg-bg-secondary rounded-full appearance-none cursor-pointer accent-accent"
-              />
-              {previewSize > 128 && (
-                <p className="text-[10px] text-text-muted mt-1.5">Preview capped at 128px — exported icon will be {previewSize}px</p>
+              {hasStroke && (
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted">Stroke</label>
+                    <span className="text-xs font-mono tabular">{previewStroke}px</span>
+                  </div>
+                  <input type="range" min={0.5} max={4} step={0.5} value={previewStroke} onChange={e => setPreviewStroke(Number(e.target.value))} className="w-full h-1.5 bg-bg-secondary rounded-full appearance-none cursor-pointer accent-accent" />
+                </div>
               )}
             </div>
-          </div>
+            {previewSize > 256 && <p className="text-[11px] text-text-muted -mt-3">Preview capped at 256px — export is {previewSize}px.</p>}
 
-          <div>
-            <label className="text-xs text-text-muted uppercase tracking-wider mb-1.5 block">Format</label>
-            <div ref={formatRef} className="relative">
-              <button
-                onClick={() => setFormatOpen(!formatOpen)}
-                className="w-full flex items-center justify-between px-3 py-2 text-sm bg-bg-secondary border border-border-primary rounded-lg hover:border-accent transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${format === 'svg' ? 'bg-emerald-400' : format === 'png' ? 'bg-blue-400' : 'bg-purple-400'}`} />
-                  <span className="uppercase font-medium text-text-primary">{format}</span>
-                  <span className="text-xs text-text-muted">— {format === 'svg' ? 'Vector, scalable' : format === 'png' ? 'Raster, transparent bg' : 'Raster, small size'}</span>
-                </div>
-                <svg className={`w-4 h-4 text-text-muted transition-transform ${formatOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {formatOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-bg-card border border-border-primary rounded-lg shadow-xl z-10 overflow-hidden">
-                  {[
-                    { id: 'svg' as const, label: 'SVG', desc: 'Vector, scalable', color: 'bg-emerald-400' },
-                    { id: 'png' as const, label: 'PNG', desc: 'Raster, transparent bg', color: 'bg-blue-400' },
-                    { id: 'webp' as const, label: 'WebP', desc: 'Raster, small size', color: 'bg-purple-400' },
-                  ].map(f => (
+            {/* Format */}
+            <div>
+              <label className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted mb-2 block">Format</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['svg', 'png', 'webp'] as const).map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setFormat(f)}
+                    className={`h-9 rounded-full border text-xs font-medium transition-colors ${format === f ? 'bg-text-primary text-bg-primary border-text-primary' : 'bg-bg-card border-border-primary text-text-muted hover:text-text-primary hover:border-border-hover'}`}
+                  >
+                    {f.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-text-muted mt-1.5">{format === 'svg' ? 'Vector, infinite scale' : format === 'png' ? 'Raster, transparent background' : 'Modern, smaller file'}</p>
+            </div>
+
+            {/* Code */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted">Code</label>
+                <div className="flex gap-1">
+                  {(['html', 'react', 'url'] as const).map(t => (
                     <button
-                      key={f.id}
-                      onClick={() => {
-                        setFormat(f.id);
-                        setFormatOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${format === f.id ? 'bg-accent/10 text-accent' : 'text-text-secondary hover:bg-bg-secondary hover:text-text-primary'}`}
+                      key={t}
+                      onClick={() => setCodeTab(t)}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${codeTab === t ? 'bg-text-primary text-bg-primary border-text-primary' : 'bg-bg-secondary border-border-primary text-text-muted hover:text-text-primary'}`}
                     >
-                      <span className={`w-2 h-2 rounded-full ${f.color}`} />
-                      <span className="font-medium uppercase">{f.label}</span>
-                      <span className="text-xs text-text-muted">— {f.desc}</span>
+                      {t === 'url' ? 'URL' : t === 'html' ? 'HTML' : 'React'}
                     </button>
                   ))}
                 </div>
-              )}
+              </div>
+              <div className="rounded-xl border border-border-primary bg-bg-secondary overflow-hidden">
+                <div className="px-3 py-2 flex items-center justify-between border-b border-border-primary bg-bg-card">
+                  <span className="text-[11px] font-mono text-text-muted">{codeTab === 'url' ? 'URL' : codeTab === 'html' ? 'HTML' : 'JSX'}</span>
+                  <button onClick={() => copy(snippet, 'snippet')} className="text-xs font-medium text-accent hover:text-accent-hover">{copied === 'snippet' ? 'Copied' : 'Copy'}</button>
+                </div>
+                <pre className="p-3 text-xs leading-5 font-[family-name:var(--font-jetbrains)] text-text-secondary overflow-x-auto whitespace-pre-wrap break-all">{snippet}</pre>
+              </div>
             </div>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs text-text-muted uppercase tracking-wider">Code</label>
-              <button onClick={copySnippet} className="text-xs text-accent hover:text-accent-hover transition-colors">
-                {copiedSnippet ? '✓ Copied' : 'Copy'}
-              </button>
-            </div>
-            <div className="flex gap-1 mb-2">
-              {(['html', 'react', 'nextjs', 'vue', 'svelte'] as const).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setCodeTab(tab)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${codeTab === tab ? 'bg-accent text-white' : 'bg-bg-secondary text-text-secondary hover:text-text-primary'}`}
-                >
-                  {tab === 'html' ? 'HTML' : tab === 'nextjs' ? 'Next.js' : tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-            <div className="code-block">
-              <pre className="p-3 text-xs overflow-x-auto">
-                <code>{getSnippet()}</code>
-              </pre>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <button onClick={copyUrl} className="btn btn-primary flex-1">
-              {copiedUrl ? '✓ URL Copied' : 'Copy URL'}
+          {/* Actions */}
+          <div className="p-4 border-t border-border-primary bg-bg-secondary flex gap-2 shrink-0">
+            <button onClick={() => copy(iconUrl, 'url')} className="flex-1 h-9 rounded-full bg-text-primary text-bg-primary text-sm font-semibold hover:opacity-90 transition-opacity">
+              {copied === 'url' ? '✓ Copied' : 'Copy URL'}
             </button>
-            <a href={iconUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary flex-1 text-center">
-              Open Raw
+            <button onClick={download} className="h-9 px-4 rounded-full bg-bg-card border border-border-primary text-sm font-medium hover:bg-bg-card-hover transition-colors">
+              Download
+            </button>
+            <a href={iconUrl} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full bg-bg-card border border-border-primary flex items-center justify-center text-text-muted hover:text-text-primary hover:border-border-hover transition-colors" aria-label="Open raw">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

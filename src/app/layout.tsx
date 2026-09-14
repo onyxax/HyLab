@@ -27,7 +27,12 @@ export const metadata: Metadata = {
   title: "HyLab — Icons API for Developers",
   description: "18,000+ professional icons from 10 sources. One endpoint, any color, size or format. Free, no auth required.",
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/favicon.svg",
+    shortcut: "/favicon.svg",
   },
   openGraph: {
     title: "HyLab — The Icons API for Modern Apps",

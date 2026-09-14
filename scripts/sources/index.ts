@@ -3,10 +3,12 @@ import { deduplicateIcons } from './utils';
 import { lucideSource } from './lucide';
 import { heroiconsSource } from './heroicons';
 import { tablerSource } from './tabler';
+import { mySource } from './mySource';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export const allSources = [lucideSource, heroiconsSource, tablerSource];
+// لإضافة مصدر جديد: أنشئ ملف sources/new.ts يطبق IconSource وأضفه هنا
+export const allSources = [lucideSource, heroiconsSource, tablerSource, mySource];
 
 export async function fetchAllIcons(): Promise<IconData[]> {
   console.log('Fetching icons from', allSources.map(s => s.id).join(', '), '...');

@@ -1,4 +1,5 @@
 import { OutputFormat } from '@/types';
+import { ICON_COLOR_RE, VALID_FORMATS, ICON_SIZE, ICON_STROKE, PAGINATION } from '@/domain/icons/constants';
 
 export interface ParsedIconQuery {
   color?: string;
@@ -8,8 +9,7 @@ export interface ParsedIconQuery {
   format: OutputFormat;
 }
 
-const HEX_COLOR_RE = /^[0-9a-fA-F]{6}$/;
-const VALID_FORMATS: OutputFormat[] = ['svg', 'png', 'webp'];
+const HEX_COLOR_RE = ICON_COLOR_RE;
 
 export function parseColor(raw: string | null): string | undefined {
   if (!raw) return undefined;
@@ -23,8 +23,8 @@ export function parseColor(raw: string | null): string | undefined {
 export function parseSize(raw: string | null, fallback?: number): number | undefined {
   if (raw === null || raw === '') return fallback;
   const n = Number(raw);
-  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1 || n > 512) {
-    throw new Error(`Invalid size "${raw}". Expected integer 1-512.`);
+  if (!Number.isFinite(n) || !Number.isInteger(n) || n < ICON_SIZE.MIN || n > ICON_SIZE.MAX) {
+    throw new Error(`Invalid size "${raw}". Expected integer ${ICON_SIZE.MIN}-${ICON_SIZE.MAX}.`);
   }
   return n;
 }
@@ -32,8 +32,8 @@ export function parseSize(raw: string | null, fallback?: number): number | undef
 export function parseStroke(raw: string | null, fallback?: number): number | undefined {
   if (raw === null || raw === '') return fallback;
   const n = Number(raw);
-  if (!Number.isFinite(n) || n < 0.5 || n > 4) {
-    throw new Error(`Invalid stroke "${raw}". Expected number 0.5-4.`);
+  if (!Number.isFinite(n) || n < ICON_STROKE.MIN || n > ICON_STROKE.MAX) {
+    throw new Error(`Invalid stroke "${raw}". Expected number ${ICON_STROKE.MIN}-${ICON_STROKE.MAX}.`);
   }
   return n;
 }
@@ -52,17 +52,24 @@ export function parseFill(raw: string | null): boolean {
 }
 
 export function parsePage(raw: string | null): number {
-  if (!raw) return 1;
+  if (!raw) return PAGINATION.DEFAULT_PAGE;
   const n = Number(raw);
   if (!Number.isInteger(n) || n < 1) throw new Error(`Invalid page "${raw}".`);
   return n;
 }
 
-export function parseLimit(raw: string | null, defaultLimit = 50, max = 100): number {
+export function parseLimit(raw: string | null, defaultLimit = PAGINATION.DEFAULT_LIMIT, max = PAGINATION.MAX_LIMIT): number {
   if (!raw) return defaultLimit;
   const n = Number(raw);
   if (!Number.isInteger(n) || n < 1 || n > max) throw new Error(`Invalid limit "${raw}". Expected 1-${max}.`);
   return n;
+}
+
+export function parseSource(raw: string | null): string | undefined {
+  if (!raw) return undefined;
+  const clean = raw.trim().toLowerCase();
+  if (!/^[a-z0-9_-]+$/.test(clean)) throw new Error(`Invalid source "${raw}".`);
+  return clean;
 }
 
 export function parseIconQuery(searchParams: URLSearchParams): ParsedIconQuery {

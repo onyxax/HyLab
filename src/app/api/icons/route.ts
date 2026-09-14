@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { listIcons } from '@/domain/icons/service';
-import { parsePage, parseLimit } from '@/lib/api/validation';
-import { jsonSuccess, jsonError } from '@/lib/api/response';
+import { parsePage, parseLimit, parseSource } from '@/lib/api/validation';
+import { jsonSuccess, jsonError, CACHE_SECONDS } from '@/lib/api/response';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,8 +9,9 @@ export async function GET(request: NextRequest) {
     const page = parsePage(searchParams.get('page'));
     const limit = parseLimit(searchParams.get('limit'));
     const category = searchParams.get('category') || undefined;
+    const source = parseSource(searchParams.get('set') || searchParams.get('source') || null);
 
-    const { data, meta } = listIcons({ page, limit, category });
+    const { data, meta } = listIcons({ page, limit, category, source });
 
     return jsonSuccess(
       data.map(icon => ({
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
         source: icon.source,
       })),
       meta,
-      { cache: 3600 }
+      { cache: CACHE_SECONDS.LIST }
     );
   } catch (e) {
     return jsonError((e as Error).message, 400);

@@ -7,12 +7,15 @@ import { useDebouncedValue } from './useDebouncedValue';
 export interface UseIconsOptions {
   limit?: number;
   initialPage?: number;
+  initialCategory?: string | null;
+  initialSet?: string | null;
 }
 
 export function useIcons(opts: UseIconsOptions = {}) {
   const limit = opts.limit ?? 48;
   const [icons, setIcons] = useState<IconListItem[]>([]);
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(opts.initialCategory ?? null);
+  const [source, setSource] = useState<string | null>(opts.initialSet ?? null);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search, 300);
   const [page, setPage] = useState(opts.initialPage ?? 1);
@@ -21,10 +24,10 @@ export function useIcons(opts: UseIconsOptions = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Reset page when category or search changes
+  // Reset page when filters or search change
   useEffect(() => {
     setPage(1);
-  }, [category, debouncedSearch]);
+  }, [category, source, debouncedSearch]);
 
   const fetchIcons = useCallback(async () => {
     setLoading(true);
@@ -36,7 +39,7 @@ export function useIcons(opts: UseIconsOptions = {}) {
         setTotal(res.meta?.total ?? res.data?.length ?? 0);
         setTotalPages(1);
       } else {
-        const res = await api.icons.list({ category: category ?? undefined, page, limit });
+        const res = await api.icons.list({ category: category ?? undefined, source: source ?? undefined, page, limit });
         setIcons(res.data || []);
         setTotal(res.meta?.total ?? 0);
         setTotalPages(res.meta?.totalPages ?? 1);
@@ -47,7 +50,7 @@ export function useIcons(opts: UseIconsOptions = {}) {
     } finally {
       setLoading(false);
     }
-  }, [category, debouncedSearch, page, limit]);
+  }, [category, source, debouncedSearch, page, limit]);
 
   useEffect(() => {
     fetchIcons();
@@ -57,6 +60,8 @@ export function useIcons(opts: UseIconsOptions = {}) {
     icons,
     category,
     setCategory,
+    source,
+    setSource,
     search,
     setSearch,
     debouncedSearch,

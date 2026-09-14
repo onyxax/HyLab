@@ -1,77 +1,100 @@
 <div align="center">
 
-<img src="public/favicon.svg" width="80" alt="HyLab Logo" />
+<img src="public/favicon.svg" width="64" alt="HyLab" />
 
 # HyLab
-
 ### The Icons API for Modern Apps
 
-**18,000+ icons. One endpoint. Any color, size, or format.**
+**18,039 icons · 10 families · One endpoint — any color, size, or format.**
 
-<br/>
+<p>
+  <a href="https://hylab.vercel.app"><img src="https://img.shields.io/badge/Live-hylab.vercel.app-111111?style=flat-square&labelColor=111111&color=111111&logo=vercel&logoColor=white" alt="Live"></a>
+  <a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/github/stars/onyxax/HyLab?style=flat-square&labelColor=111111&color=111111&label=GitHub&logo=github&logoColor=white" alt="Stars"></a>
+  <a href="https://hylab.vercel.app/api/icons?limit=1"><img src="https://img.shields.io/badge/Icons-18,039-7c9a82?style=flat-square&labelColor=111111&color=7c9a82" alt="Icons"></a>
+  <a href="https://github.com/onyxax/HyLab/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-7c9a82?style=flat-square&labelColor=111111&color=7c9a82" alt="MIT"></a>
+</p>
 
-<a href="https://vercel.com/new/clone?repository-url=https://github.com/onyxax/HyLab"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
-<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/deploy-%E2%9A%99%EF%B8%8F%20vercel-7c9a82?style=for-the-badge&labelColor=2c2825" alt="Vercel" /></a>
-<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/license-MIT-7c9a82?style=for-the-badge&labelColor=2c2825" alt="MIT License" /></a>
-<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/18%2C039%20icons-free-7c9a82?style=for-the-badge&labelColor=2c2825" alt="18039 Icons" /></a>
+<a href="https://vercel.com/new/clone?repository-url=https://github.com/onyxax/HyLab"><img src="https://vercel.com/button" alt="Deploy with Vercel"></a>
 
-<br/>
-
-<img src="public/screenshots/home.png" width="100%" alt="HyLab Screenshot" />
+<br><br>
+<img src="public/screenshots/home.png" width="100%" alt="HyLab — Browse 18k icons" style="border:1px solid #e5e0d8;border-radius:16px" />
 
 </div>
 
 ---
 
-## Quick Start
+## <img src="https://hylab.vercel.app/api/icons/zap?color=7c9a82&size=20" width="20" height="20" alt=""> Quick Start
+
+No install — just a URL. Works with `curl`, `HTML`, `React`, `Next.js`, `Vue`, `Svelte`, `Python`.
 
 ```bash
-# No install needed — just use the URL
+# curl — SVG
 curl "https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32"
+
+# curl — PNG
+curl "https://hylab.vercel.app/api/icons/home?color=7c9a82&size=64&format=png"
+
+# curl — filter by family + category
+curl "https://hylab.vercel.app/api/icons?set=tabler&category=navigation&limit=20"
 ```
 
 ```html
-<!-- Drop it into any HTML -->
+<!-- HTML — drop in anywhere -->
 <img src="https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32" alt="Home" />
+<img src="https://hylab.vercel.app/api/icons/heart?color=ef4444&size=24" alt="Heart" />
 ```
 
 ```tsx
-// React component
-import { HyIcon } from 'hylab-icons';
-
-<HyIcon name="home" color="#7c9a82" size={32} />
+// React — zero deps
+const Icon = ({ name, color = "7c9a82", size = 24 }: { name: string; color?: string; size?: number }) => (
+  <img src={`https://hylab.vercel.app/api/icons/${name}?color=${color}&size=${size}`} alt={name} />
+);
 ```
 
 ---
 
-## Features
+## <img src="https://hylab.vercel.app/api/icons/layers?color=7c9a82&size=20" width="20" height="20" alt=""> Features
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
-### One API, All Icons
-No need to install 10 different icon packages. One endpoint serves them all.
+#### <img src="https://hylab.vercel.app/api/icons/inbox?color=7c9a82&size=16" width="16" height="16" alt=""> One API, All Icons
+One endpoint serves **10 families**. No need to install 10 packages.
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
-### Fully Customizable
-Change color, size, stroke width, and output format with simple query parameters.
+#### <img src="https://hylab.vercel.app/api/icons/sliders?color=7c9a82&size=16" width="16" height="16" alt=""> Fully Customizable
+`?color=7c9a82&size=32&stroke=2&format=svg` — color, size, stroke, format.
 
 </td>
 </tr>
 <tr>
-<td>
+<td valign="top">
 
-### SVG, PNG & WebP
-Get icons in any format. SVG for web, PNG for compatibility, WebP for performance.
+#### <img src="https://hylab.vercel.app/api/icons/image?color=7c9a82&size=16" width="16" height="16" alt=""> SVG, PNG & WebP
+Vector for web, raster for email. `sharp` on the edge, immutable cache.
 
 </td>
-<td>
+<td valign="top">
 
-### No Authentication
-Free, open source, no API keys. Just make a request and get your icon.
+#### <img src="https://hylab.vercel.app/api/icons/shield-check?color=7c9a82&size=16" width="16" height="16" alt=""> No Auth, No Limits
+Free, open source, CORS `*`. No API keys.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+#### <img src="https://hylab.vercel.app/api/icons/filter?color=7c9a82&size=16" width="16" height="16" alt=""> Filter by Family
+`?set=tabler` or `?set=lucide` — isolate one family. Combines with `?category=`.
+
+</td>
+<td valign="top">
+
+#### <img src="https://hylab.vercel.app/api/icons/link?color=7c9a82&size=16" width="16" height="16" alt=""> Shareable URLs
+`/browse?set=tabler&category=navigation` — every filter is in the URL.
 
 </td>
 </tr>
@@ -79,209 +102,168 @@ Free, open source, no API keys. Just make a request and get your icon.
 
 ---
 
-## API Reference
+## <img src="https://hylab.vercel.app/api/icons/code?color=7c9a82&size=20" width="20" height="20" alt=""> API Reference
 
-### Get Icon
-
+### <img src="https://hylab.vercel.app/api/icons/box?color=7c9a82&size=16" width="16" height="16" alt=""> Get Icon
 ```
 GET /api/icons/:name
 ```
-
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `name` | path | — | Icon name (e.g., `home`, `search`, `heart`) |
-| `color` | query | `currentColor` | Hex color without `#` |
-| `size` | query | `24` | Size in pixels (1–512) |
-| `stroke` | query | `2` | Stroke width (0.5–4) |
-| `format` | query | `svg` | Output format: `svg`, `png`, `webp` |
+| `name` | path | — | Icon name — `home`, `search`, `heart` |
+| `color` | query | `currentColor` | Hex without `#` — `7c9a82` |
+| `size` | query | `24` | Pixels `1–512` |
+| `stroke` | query | `2` | Stroke `0.5–4` |
+| `fill` | query | `false` | `true` to fill shape |
+| `format` | query | `svg` | `svg` · `png` · `webp` |
 
 ```bash
-# SVG
 curl "https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32"
-
-# PNG
 curl "https://hylab.vercel.app/api/icons/home?format=png&size=64"
-
-# WebP
-curl "https://hylab.vercel.app/api/icons/home?format=webp&size=128"
+curl "https://hylab.vercel.app/api/icons/home?color=7c9a82&size=48&stroke=3&format=webp"
 ```
 
-### Search Icons
+### <img src="https://hylab.vercel.app/api/icons/list?color=7c9a82&size=16" width="16" height="16" alt=""> List Icons
+```
+GET /api/icons?page=1&limit=20&category=navigation&set=tabler
+```
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | query | `1` | Page number |
+| `limit` | query | `50` | Items per page — max `100` |
+| `category` | query | — | `navigation`, `action`, `media`… (14 total) |
+| `set` | query | — | Family — `tabler`, `lucide`, `phosphor`… (alias `source`) |
 
+### <img src="https://hylab.vercel.app/api/icons/search-x?color=7c9a82&size=16" width="16" height="16" alt=""> Search
 ```
 GET /api/icons/search?q=arrow
 ```
 
-### List Categories
-
+### <img src="https://hylab.vercel.app/api/icons/folder?color=7c9a82&size=16" width="16" height="16" alt=""> Categories
 ```
 GET /api/icons/categories
+GET /api/icons/categories?set=tabler
 ```
+Filter counts to a family.
 
-### List Icon Sets
-
+### <img src="https://hylab.vercel.app/api/icons/layers?color=7c9a82&size=16" width="16" height="16" alt=""> Sets
 ```
 GET /api/icons/sets
+GET /api/icons/sets?category=navigation
 ```
+Filter families to a category.
 
-### List Icons (Paginated)
-
+### <img src="https://hylab.vercel.app/api/icons/activity?color=7c9a82&size=16" width="16" height="16" alt=""> Status
 ```
-GET /api/icons?page=1&limit=20&category=navigation
+GET /api/status
 ```
+Live probes to 5 endpoints — `avgResponseTime`, `services[]`, `uptime`.
 
 ---
 
-## Code Examples
+## <img src="https://hylab.vercel.app/api/icons/code?color=7c9a82&size=20" width="20" height="20" alt=""> Code Examples
 
 <details>
-<summary><strong>HTML</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/file-code?color=7c9a82&size=14" width="14" height="14" alt=""> HTML</strong> — copy & paste</summary>
 
 ```html
 <img src="https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32" alt="Home" />
 <img src="https://hylab.vercel.app/api/icons/search?color=ffffff&size=24" alt="Search" />
 <img src="https://hylab.vercel.app/api/icons/heart?color=ef4444&size=48&format=png" alt="Heart" />
+
+<!-- Family filter -->
+<img src="https://hylab.vercel.app/api/icons/home?color=7c9a82&size=32" alt="Home" />
 ```
 
 </details>
 
 <details>
-<summary><strong>React</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/atom?color=7c9a82&size=14" width="14" height="14" alt=""> React</strong> — zero deps</summary>
 
 ```tsx
-import { HyIcon } from 'hylab-icons';
+function Icon({ name, color = "7c9a82", size = 24 }: { name: string; color?: string; size?: number }) {
+  return <img src={`https://hylab.vercel.app/api/icons/${name}?color=${color}&size=${size}`} alt={name} />;
+}
 
-function App() {
-  return (
-    <div>
-      <HyIcon name="home" color="#7c9a82" size={32} />
-      <HyIcon name="search" color="#ffffff" size={24} />
-      <HyIcon name="heart" color="#ef4444" size={48} format="png" />
-    </div>
-  );
+// Family filtered list
+function TablerIcons() {
+  const [icons, setIcons] = useState([]);
+  useEffect(() => {
+    fetch('/api/icons?set=tabler&limit=20').then(r => r.json()).then(d => setIcons(d.data));
+  }, []);
+  return icons.map(i => <Icon key={i.name} name={i.name} />);
 }
 ```
-
 </details>
 
 <details>
-<summary><strong>Next.js</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/server?color=7c9a82&size=14" width="14" height="14" alt=""> Next.js</strong> — edge proxy</summary>
 
 ```tsx
 // app/icon/[name]/route.ts
 import { NextResponse } from "next/server";
-
-export async function GET(
-  request: Request,
-  { params }: { params: { name: string } }
-) {
-  const url = new URL(request.url);
-  const color = url.searchParams.get("color") || "7c9a82";
-  const size = url.searchParams.get("size") || "24";
-
-  const res = await fetch(
-    `https://hylab.vercel.app/api/icons/${params.name}?color=${color}&size=${size}`
-  );
-
+export async function GET(req: Request, { params }: { params: { name: string } }) {
+  const { searchParams } = new URL(req.url);
+  const color = searchParams.get("color") || "7c9a82";
+  const set = searchParams.get("set") || "tabler";
+  const res = await fetch(`https://hylab.vercel.app/api/icons/${params.name}?color=${color}&set=${set}`);
   return new NextResponse(await res.blob(), {
-    headers: {
-      "Content-Type": "image/svg+xml",
-      "Cache-Control": "public, max-age=86400",
-    },
+    headers: { "Content-Type": "image/svg+xml", "Cache-Control": "public, max-age=86400" },
   });
 }
 ```
-
 </details>
 
 <details>
-<summary><strong>Vue</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/code?color=7c9a82&size=14" width="14" height="14" alt=""> Vue</strong></summary>
 
 ```vue
-<template>
-  <span v-html="svg" />
-</template>
-
+<template><span v-html="svg" /></template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-
-const props = defineProps({
-  name: String,
-  color: { type: String, default: "7c9a82" },
-  size: { type: Number, default: 24 },
-});
-
+import { ref, onMounted } from "vue";
 const svg = ref("");
-
-const loadIcon = async () => {
-  const res = await fetch(
-    `/api/icons/${props.name}?color=${props.color}&size=${props.size}`
-  );
+onMounted(async () => {
+  const res = await fetch(`/api/icons/home?color=7c9a82&size=32&set=lucide`);
   svg.value = await res.text();
-};
-
-onMounted(loadIcon);
-watch(() => props.name, loadIcon);
+});
 </script>
 ```
-
 </details>
 
 <details>
-<summary><strong>Svelte</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/code?color=7c9a82&size=14" width="14" height="14" alt=""> Svelte</strong></summary>
 
 ```svelte
 <script>
-  export let name;
-  export let color = "7c9a82";
-  export let size = 24;
-
+  export let name = "home";
   let svg = "";
-
-  $: fetch(`/api/icons/${name}?color=${color}&size=${size}`)
-    .then(r => r.text())
-    .then(t => svg = t);
+  $: fetch(`/api/icons/${name}?color=7c9a82&set=tabler`).then(r=>r.text()).then(t=>svg=t);
 </script>
-
 <span>{@html svg}</span>
 ```
-
 </details>
 
 <details>
-<summary><strong>Python</strong></summary>
+<summary><strong><img src="https://hylab.vercel.app/api/icons/terminal?color=7c9a82&size=14" width="14" height="14" alt=""> Python</strong></summary>
 
 ```python
 import requests
 
-# Get SVG
-res = requests.get(
-    "https://hylab.vercel.app/api/icons/home",
-    params={"color": "7c9a82", "size": "32"}
-)
-svg_content = res.text
+# Family filtered
+res = requests.get("https://hylab.vercel.app/api/icons", params={"set": "tabler", "limit": 20})
+icons = res.json()["data"]
 
-# Get PNG
-res = requests.get(
-    "https://hylab.vercel.app/api/icons/home",
-    params={"format": "png", "size": "64"}
-)
-with open("icon.png", "wb") as f:
-    f.write(res.content)
+# Single icon
+svg = requests.get("https://hylab.vercel.app/api/icons/home", params={"color": "7c9a82", "size": "32"}).text
 
 # Search
-res = requests.get(
-    "https://hylab.vercel.app/api/icons/search",
-    params={"q": "arrow"}
-)
-icons = res.json()["data"]
+icons = requests.get("https://hylab.vercel.app/api/icons/search", params={"q": "arrow"}).json()["data"]
 ```
-
 </details>
 
 ---
 
-## Icon Sources
+## <img src="https://hylab.vercel.app/api/icons/library?color=7c9a82&size=20" width="20" height="20" alt=""> Icon Sources
 
 | Source | Icons | License |
 |--------|-------|---------|
@@ -296,55 +278,93 @@ icons = res.json()["data"]
 | **CSS.gg** | 704 | MIT |
 | **Heroicons** | 324 | MIT |
 
-**Total: 18,039 icons across 14 categories**
+**Total: 18,039 icons · 14 categories · Shareable `/browse?set=tabler&category=navigation`**
 
 ---
 
-## Tech Stack
+## <img src="https://hylab.vercel.app/api/icons/cpu?color=7c9a82&size=20" width="20" height="20" alt=""> Tech Stack
 
-<div align="center">
-
-<a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&labelColor=000000" alt="Next.js" /></a>
-<a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&labelColor=3178c6" alt="TypeScript" /></a>
-<a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4-06b6d4?style=for-the-badge&logo=tailwindcss&labelColor=06b6d4" alt="Tailwind" /></a>
-<a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&labelColor=000000" alt="Vercel" /></a>
-
-</div>
+<p align="left">
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16.2-111111?style=flat-square&logo=nextdotjs&logoColor=white&labelColor=111111&color=111111" alt="Next.js"></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.7-111111?style=flat-square&logo=typescript&logoColor=white&labelColor=111111&color=111111" alt="TypeScript"></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.0-111111?style=flat-square&logo=tailwindcss&logoColor=white&labelColor=111111&color=111111" alt="Tailwind"></a>
+  <a href="https://vercel.com"><img src="https://img.shields.io/badge/Deploy-Vercel-111111?style=flat-square&logo=vercel&logoColor=white&labelColor=111111&color=111111" alt="Vercel"></a>
+</p>
 
 ---
 
-## Getting Started (Self-Host)
+## <img src="https://hylab.vercel.app/api/icons/download?color=7c9a82&size=20" width="20" height="20" alt=""> Self-Host
 
 ```bash
-# Clone
 git clone https://github.com/onyxax/HyLab.git
-cd icon-api
-
-# Install
+cd HyLab
 npm install
-
-# Run
 npm run dev
+# http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+---
+
+## <img src="https://hylab.vercel.app/api/icons/users?color=7c9a82&size=20" width="20" height="20" alt=""> Contributing
+
+Contributions welcome — open an issue or PR.
+
+```bash
+git checkout -b feat/my-feature
+npm run build  # must pass
+```
 
 ---
 
-## Contributing
+## <img src="https://hylab.vercel.app/api/icons/scale?color=7c9a82&size=20" width="20" height="20" alt=""> License
 
-Contributions are welcome! Please open an issue or submit a pull request.
-
----
-
-## License
-
-[MIT](https://github.com/onyxax/HyLab/blob/master/LICENSE) — use freely in personal and commercial projects.
+[MIT](https://github.com/onyxax/HyLab/blob/main/LICENSE) — free for personal and commercial use.
 
 ---
 
 <div align="center">
 
-**Built by [onyxax](https://guns.lol/onyxax)**
+<table>
+<tr>
+<td align="left" width="40%" valign="top">
+
+<img src="public/favicon.svg" width="28" alt="HyLab" />
+
+**HyLab** — The Icons API for Modern Apps<br>
+<sub>18,039 icons from 10 families · One endpoint, any color, size, or format. Free and open source.</sub>
+
+<br><br>
+
+<a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/badge/GitHub-onyxax%2FHyLab-2c2825?style=flat-square&logo=github&logoColor=white&labelColor=2c2825" alt="GitHub"></a>
+<a href="https://hylab.vercel.app/api/status"><img src="https://img.shields.io/badge/status-live-10b981?style=flat-square&labelColor=2c2825&color=10b981" alt="Status"></a>
+
+</td>
+<td align="left" width="30%" valign="top">
+
+**Explore**
+
+<a href="https://hylab.vercel.app/browse"><img src="https://hylab.vercel.app/api/icons/compass?color=7c9a82&size=12" width="12" height="12" alt=""> Browse Icons</a><br>
+<a href="https://hylab.vercel.app/docs"><img src="https://hylab.vercel.app/api/icons/book-open?color=7c9a82&size=12" width="12" height="12" alt=""> Documentation</a><br>
+<a href="https://hylab.vercel.app/about"><img src="https://hylab.vercel.app/api/icons/info?color=7c9a82&size=12" width="12" height="12" alt=""> About</a><br>
+<a href="https://hylab.vercel.app/status"><img src="https://hylab.vercel.app/api/icons/activity?color=7c9a82&size=12" width="12" height="12" alt=""> System Status</a>
+
+</td>
+<td align="left" width="30%" valign="top">
+
+**Resources**
+
+<a href="https://github.com/onyxax/HyLab"><img src="https://hylab.vercel.app/api/icons/iconoir-github?color=7c9a82&size=12" width="12" height="12" alt=""> GitHub</a><br>
+<a href="https://github.com/onyxax/HyLab/blob/main/LICENSE"><img src="https://hylab.vercel.app/api/icons/scale?color=7c9a82&size=12" width="12" height="12" alt=""> MIT License</a><br>
+<sub>No tracking · No cookies</sub>
+
+</td>
+</tr>
+</table>
+
+<br>
+
+---
+
+<sub>© 2026 HyLab · Icons from Tabler, Lucide, Heroicons & others — respective licenses apply. · Built by <a href="https://guns.lol/onyxax"><strong>onyxax</strong></a></sub>
 
 </div>
