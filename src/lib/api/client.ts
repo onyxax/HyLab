@@ -44,9 +44,15 @@ export const api = {
       );
       return data;
     },
-    search: async (query: string) => {
+    search: async (query: string, opts?: { category?: string; source?: string; set?: string }) => {
+      const sp = new URLSearchParams();
+      sp.set('q', query);
+      const cat = opts?.category;
+      const src = opts?.source || opts?.set;
+      if (cat) sp.set('category', cat);
+      if (src) sp.set('set', src);
       const data = await fetchJson<{ success: boolean; data: IconListItem[]; meta: { total: number; query: string } }>(
-        `/api/icons/search?q=${encodeURIComponent(query)}`
+        `/api/icons/search?${sp.toString()}`
       );
       return data;
     },

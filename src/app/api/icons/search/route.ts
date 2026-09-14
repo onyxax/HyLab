@@ -50,7 +50,9 @@ export async function GET(request: NextRequest) {
     return jsonError(`Query must be 1-${API.SEARCH_QUERY_MAX} characters`, 400);
   }
 
-  const results = searchIcons(query);
+  const category = searchParams.get('category') || undefined;
+  const source = (searchParams.get('set') || searchParams.get('source') || undefined) as string | undefined;
+  const results = searchIcons(query, { category, source });
 
   return jsonSuccess(
     results.map(icon => ({
@@ -60,7 +62,7 @@ export async function GET(request: NextRequest) {
       svg: icon.svg,
       source: icon.source,
     })),
-    { total: results.length, query },
+    { total: results.length, query, category, source },
     { cache: CACHE_SECONDS.LIST }
   );
 }

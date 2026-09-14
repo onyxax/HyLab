@@ -91,8 +91,8 @@ export function listIcons(opts: { page: number; limit: number; category?: string
   };
 }
 
-export function searchIcons(query: string) {
-  return repoSearch(query);
+export function searchIcons(query: string, filter?: { category?: string; source?: string }) {
+  return repoSearch(query, filter);
 }
 
 export function __clearServiceCache() {

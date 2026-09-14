@@ -34,7 +34,7 @@ export function useIcons(opts: UseIconsOptions = {}) {
     setError(null);
     try {
       if (debouncedSearch.trim()) {
-        const res = await api.icons.search(debouncedSearch);
+        const res = await api.icons.search(debouncedSearch, { category: category ?? undefined, source: source ?? undefined });
         setIcons(res.data || []);
         setTotal(res.meta?.total ?? res.data?.length ?? 0);
         setTotalPages(1);

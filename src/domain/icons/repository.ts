@@ -46,16 +46,17 @@ export function getIconsBySource(source: string): Icon[] {
   return _bySource!.get(source) ?? [];
 }
 
-export function searchIcons(query: string): Icon[] {
+export function searchIcons(query: string, filter?: { category?: string; source?: string }): Icon[] {
   const q = query.toLowerCase().trim();
   if (!q) return [];
-  const icons = ensureLoaded();
-  // Linear scan — acceptable for 18k, but indexed via Map for future optimization.
-  // Future: build inverted index on name/tags/category if needed.
+  let icons = ensureLoaded();
+  if (filter?.category) icons = icons.filter(i => i.category === filter.category);
+  if (filter?.source) icons = icons.filter(i => i.source === filter.source);
   return icons.filter(icon =>
     icon.name.toLowerCase().includes(q) ||
     icon.tags.some(tag => tag.toLowerCase().includes(q)) ||
-    icon.category.toLowerCase().includes(q)
+    icon.category.toLowerCase().includes(q) ||
+    icon.source.toLowerCase().includes(q)
   );
 }
 
