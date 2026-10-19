@@ -10,6 +10,8 @@ export interface Icon {
   tags: string[];
   svg: string;
   source: string;
+  /** Related variant icon names (same family, e.g. fill/circle/square/slash). Only set when applicable. */
+  variants?: string[];
 }
 
 export interface Pagination {

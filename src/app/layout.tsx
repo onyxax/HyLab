@@ -25,7 +25,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hylab.vercel.app"),
   title: "HyLab — Icons API for Developers",
-  description: "18,000+ professional icons from 10 sources. One endpoint, any color, size or format. Free, no auth required.",
+  description: "25,500+ professional icons from 11 sources. One endpoint, any color, size or format. Free, no auth required.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "HyLab — The Icons API for Modern Apps",
-    description: "18,039 icons. One endpoint. Any color, size or format — SVG, PNG, WebP.",
+    description: "26,150 icons. One endpoint. Any color, size or format — SVG, PNG, WebP.",
     images: [{ url: "/screenshots/home.png", width: 1200, height: 630, alt: "HyLab preview" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "HyLab — Icons API",
-    description: "18,039 icons — one API call.",
+    description: "26,150 icons — one API call.",
     images: ["/screenshots/home.png"],
   },
 };

@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
         tags: icon.tags,
         svg: icon.svg,
         source: icon.source,
+        ...(icon.variants?.length ? { variants: icon.variants } : {}),
       })),
       meta,
       { cache: CACHE_SECONDS.LIST }

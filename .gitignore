@@ -115,6 +115,14 @@ temp/
 src/data/external-icons.json
 
 # ===============================
+# Local uptime history (real probe data, machine-specific)
+# ===============================
+.data/
+
+# Local dev server log
+.devlog.txt
+
+# ===============================
 # Public — ignore local screenshots if added
 # ===============================
 # public/screenshots/*  — keep tracked, uncomment to ignore

@@ -19,7 +19,7 @@ export function HeroSection() {
             </h1>
 
             <p className="mt-5 text-[17px] leading-relaxed text-text-secondary max-w-[46ch] text-pretty">
-              <span className="font-semibold text-text-primary">18,039</span> icons from 10 sources. One endpoint.
+              <span className="font-semibold text-text-primary">26,150</span> icons from 11 sources. One endpoint.
               Any color, size, or format — no auth, no limits.
             </p>
 
@@ -90,7 +90,7 @@ export function HeroSection() {
 
             <div className="mt-3 grid grid-cols-3 gap-3 text-center">
               {[
-                { k: '18,039', v: 'icons' },
+                { k: '26,150', v: 'icons' },
                 { k: '10', v: 'sources' },
                 { k: '3', v: 'formats' },
               ].map(item => (

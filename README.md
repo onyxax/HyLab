@@ -5,12 +5,12 @@
 # HyLab
 ### The Icons API for Modern Apps
 
-**18,039 icons · 10 families · One endpoint — any color, size, or format.**
+**26,150 icons · 11 families · One endpoint — any color, size, or format.**
 
 <p>
   <a href="https://hylab.vercel.app"><img src="https://img.shields.io/badge/Live-hylab.vercel.app-111111?style=flat-square&labelColor=111111&color=111111&logo=vercel&logoColor=white" alt="Live"></a>
   <a href="https://github.com/onyxax/HyLab"><img src="https://img.shields.io/github/stars/onyxax/HyLab?style=flat-square&labelColor=111111&color=111111&label=GitHub&logo=github&logoColor=white" alt="Stars"></a>
-  <a href="https://hylab.vercel.app/api/icons?limit=1"><img src="https://img.shields.io/badge/Icons-18,039-7c9a82?style=flat-square&labelColor=111111&color=7c9a82" alt="Icons"></a>
+  <a href="https://hylab.vercel.app/api/icons?limit=1"><img src="https://img.shields.io/badge/Icons-26,150-7c9a82?style=flat-square&labelColor=111111&color=7c9a82" alt="Icons"></a>
   <a href="https://github.com/onyxax/HyLab/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-7c9a82?style=flat-square&labelColor=111111&color=7c9a82" alt="MIT"></a>
 </p>
 
@@ -60,7 +60,7 @@ const Icon = ({ name, color = "7c9a82", size = 24 }: { name: string; color?: str
 <td width="50%" valign="top">
 
 #### <img src="https://hylab.vercel.app/api/icons/inbox?color=7c9a82&size=16" width="16" height="16" alt=""> One API, All Icons
-One endpoint serves **10 families**. No need to install 10 packages.
+One endpoint serves **11 families**. No need to install 11 packages.
 
 </td>
 <td width="50%" valign="top">
@@ -267,6 +267,7 @@ icons = requests.get("https://hylab.vercel.app/api/icons/search", params={"q": "
 
 | Source | Icons | License |
 |--------|-------|---------|
+| **SF Symbols** | 8,111 | Apple SF Symbols Agreement |
 | **Tabler** | 5,093 | MIT |
 | **Remix** | 3,229 | Apache 2.0 |
 | **Carbon** | 2,665 | Apache 2.0 |
@@ -278,7 +279,7 @@ icons = requests.get("https://hylab.vercel.app/api/icons/search", params={"q": "
 | **CSS.gg** | 704 | MIT |
 | **Heroicons** | 324 | MIT |
 
-**Total: 18,039 icons · 14 categories · Shareable `/browse?set=tabler&category=navigation`**
+**Total: 26,150 icons · 14 categories · Shareable `/browse?set=sfsymbols&category=navigation`**
 
 ---
 
@@ -301,6 +302,56 @@ cd HyLab
 npm install
 npm run dev
 # http://localhost:3000
+```
+
+---
+
+## <img src="https://hylab.vercel.app/api/icons/activity?color=7c9a82&size=20" width="20" height="20" alt=""> Status Page — Real History
+
+`/status` is backed by **real probes and a real database** — no mock data, no fabricated uptime.
+
+- **5 live probes** (SVG, PNG, search, categories, list) run in parallel on every page view and every cron tick.
+- **Permanent history** in Postgres (Supabase) — schema `hylab_status`:
+  - `daily` — per-day, per-service buckets (`ok`, `fail`, `ms_sum`, `ms_max`, `last_fail_at`)
+  - `runs` — log of every probe batch (kept 30 days)
+  - `incidents` — outage windows with open/close timestamps
+- **Uptime timeline** — a continuous segmented strip (7D / 90D / 12M). Every slot is a real period: green = operational, amber = degraded, red = outage, hollow = no probes yet. Click a slot for its exact numbers.
+- **Uptime everywhere** — the overall card shows 7d / 90d / all-time, and every service row carries its own 7d and 90d uptime plus the probe count behind it.
+- **Honest gaps** — days without probes render as an empty slot, never as a fake 100%.
+- **Daily cron** (`/api/cron/probe`) records even with no visitors, and `.github/workflows/status-probe.yml` fires the same probe every 15 minutes so the history fills in fast.
+
+### Setup
+
+```bash
+cp .env.example .env.local
+# DATABASE_URL=postgresql://[ROLE].[PROJECT-REF]:[PASSWORD]@aws-[INDEX]-[REGION].pooler.supabase.com:6543/postgres
+# CRON_SECRET=<long random string>
+```
+
+The 15-minute GitHub workflow needs no secret — it calls the public
+`/api/status` endpoint, which performs the same real measurement and
+records it. (`CRON_SECRET` only protects the lighter `/api/cron/probe`
+route that the Vercel Cron job calls.)
+
+The connecting role only needs access to the `hylab_status` schema:
+
+```sql
+create schema if not exists hylab_status;
+-- tables: daily / runs / incidents  (see src/domain/status/db.ts)
+grant usage on schema hylab_status to hylab_status;
+grant select, insert, update on hylab_status.daily to hylab_status;
+grant select, insert on hylab_status.runs to hylab_status;
+grant delete on hylab_status.runs to hylab_status;
+grant select, insert, update on hylab_status.incidents to hylab_status;
+grant usage, select on all sequences in schema hylab_status to hylab_status;
+```
+
+Without `DATABASE_URL` the app falls back to a local file (`.data/uptime.json`) so the page still works in development.
+
+Import an existing local history into the database:
+
+```bash
+node scripts/migrate-uptime-to-db.cjs
 ```
 
 ---
@@ -331,7 +382,7 @@ npm run build  # must pass
 <img src="public/favicon.svg" width="28" alt="HyLab" />
 
 **HyLab** — The Icons API for Modern Apps<br>
-<sub>18,039 icons from 10 families · One endpoint, any color, size, or format. Free and open source.</sub>
+<sub>26,150 icons from 11 families · One endpoint, any color, size, or format. Free and open source.</sub>
 
 <br><br>
 
@@ -365,6 +416,6 @@ npm run build  # must pass
 
 ---
 
-<sub>© 2026 HyLab · Icons from Tabler, Lucide, Heroicons & others — respective licenses apply. · Built by <a href="https://guns.lol/onyxax"><strong>onyxax</strong></a></sub>
+<sub>© 2026 HyLab · Icons from Tabler, SF Symbols, Lucide & others — respective licenses apply. · Built by <a href="https://guns.lol/onyxax"><strong>onyxax</strong></a></sub>
 
 </div>

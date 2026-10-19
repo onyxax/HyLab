@@ -1,15 +1,18 @@
 {
   "name": "hylab",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "fetch-icons": "npx tsx scripts/fetch-icons.ts"
+    "fetch-icons": "npx tsx scripts/fetch-icons.ts",
+    "extract-icons": "node scripts/extract-all.js",
+    "migrate:uptime": "node scripts/migrate-uptime-to-db.cjs"
   },
   "dependencies": {
+    "@bradleyhodges/sfsymbols": "^8.1.3",
     "@carbon/icons-react": "^11.82.0",
     "@heroicons/react": "^2.2.0",
     "@phosphor-icons/core": "^2.1.1",
@@ -21,6 +24,7 @@
     "iconoir": "^7.11.0",
     "lucide-static": "^1.17.0",
     "next": "^16.2.9",
+    "pg": "^8.23.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remixicon": "^4.9.1",
@@ -29,6 +33,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.10.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.17.0",

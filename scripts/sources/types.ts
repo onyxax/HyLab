@@ -4,6 +4,8 @@ export interface IconData {
   tags: string[];
   svg: string;
   source: string;
+  /** Related variant icon names (e.g. SF Symbols fill/circle/square/slash of the same family). */
+  variants?: string[];
 }
 
 export interface IconSource {

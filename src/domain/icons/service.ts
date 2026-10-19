@@ -36,13 +36,14 @@ export function getCategories(filter?: { source?: string }): IconCategory[] {
       .sort((a, b) => b.count - a.count);
     return _cachedCategories;
   }
-  // Filtered by source — dynamic counts
+  // Filtered by source — dynamic counts, SAME order as base (never re-sort:
+  // clicking a family/category only changes counts, never reshuffles).
   const icons = getIconsBySource(filter.source!);
   const map = new Map<string, number>();
   for (const icon of icons) map.set(icon.category, (map.get(icon.category) || 0) + 1);
   // include zero-count categories for completeness
   const allCats = getCategories();
-  return allCats.map(c => ({ ...c, count: map.get(c.id) || 0 })).sort((a, b) => b.count - a.count);
+  return allCats.map(c => ({ ...c, count: map.get(c.id) || 0 }));
 }
 
 export function getSets(filter?: { category?: string }): IconSet[] {
@@ -60,7 +61,7 @@ export function getSets(filter?: { category?: string }): IconSet[] {
   const map = new Map<string, number>();
   for (const icon of icons) map.set(icon.source, (map.get(icon.source) || 0) + 1);
   const allSets = getSets();
-  return allSets.map(s => ({ ...s, count: map.get(s.id) || 0 })).sort((a, b) => b.count - a.count);
+  return allSets.map(s => ({ ...s, count: map.get(s.id) || 0 }));
 }
 
 export function listIcons(opts: { page: number; limit: number; category?: string; source?: string }) {

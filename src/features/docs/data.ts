@@ -96,6 +96,7 @@ svg = res.text`,
 ];
 
 export const iconSets = [
+  { name: 'SF Symbols', count: '8,111', desc: 'Apple · platforms only' },
   { name: 'Tabler', count: '5,093', desc: 'MIT · consistent stroke' },
   { name: 'Remix', count: '3,229', desc: 'Line & fill variants' },
   { name: 'Carbon', count: '2,665', desc: 'IBM Design Language' },

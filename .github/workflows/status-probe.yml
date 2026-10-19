@@ -1,0 +1,30 @@
+name: Status probe
+
+# Records a real uptime probe every 15 minutes, straight from our own
+# GitHub account — no third-party uptime service involved.
+#
+# The probe hits the public /api/status endpoint on the deployed site.
+# That endpoint measures the 5 API endpoints (SVG, PNG, search, categories,
+# list) with no-store and a 5s timeout, then writes the result into our
+# Postgres database (schema hylab_status). No secret is required here
+# because /api/status is a public, read-only endpoint by design.
+#
+# Vercel Cron also runs a daily check via /api/cron/probe (that one is
+# protected with CRON_SECRET); this workflow just makes the history denser
+# so the 7D / 90D / 12M timelines fill with real data.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record uptime probe
+        run: |
+          curl -fsS --max-time 25 \
+            "https://hylab.vercel.app/api/status" \
+            -o /dev/null \
+            -w 'probe recorded — http %{http_code}\n'

@@ -3,7 +3,7 @@ import { getIconByName } from '@/domain/icons/repository';
 import { customizeSvg } from '@/domain/icons/transforms/customizeSvg';
 import { convertSvgToFormat, getMimeType, getFileExtension } from '@/domain/icons/transforms/convertFormat';
 import { parseIconQuery } from '@/lib/api/validation';
-import { jsonError, svgResponse, binaryResponse } from '@/lib/api/response';
+import { jsonSuccess, jsonError, svgResponse, binaryResponse, CACHE_SECONDS } from '@/lib/api/response';
 import { ICON_SIZE } from '@/domain/icons/constants';
 
 export async function GET(
@@ -11,17 +11,37 @@ export async function GET(
   { params }: { params: Promise<{ name: string }> }
 ) {
   const { name } = await params;
-
-  let query;
-  try {
-    query = parseIconQuery(new URL(request.url).searchParams);
-  } catch (e) {
-    return jsonError((e as Error).message, 400);
-  }
+  const searchParams = new URL(request.url).searchParams;
 
   const icon = getIconByName(name);
   if (!icon) {
     return jsonError(`Icon "${name}" not found`, 404);
+  }
+
+  // ?format=json — metadata as JSON (powers variant navigation in preview).
+  // Handled before parseIconQuery since json is not an image format.
+  if ((searchParams.get('format') || '').toLowerCase() === 'json') {
+    const pathCount = (icon.svg.match(/<path[\s>]/gi) || []).length;
+    return jsonSuccess(
+      {
+        name: icon.name,
+        category: icon.category,
+        tags: icon.tags,
+        svg: icon.svg,
+        source: icon.source,
+        ...(icon.variants?.length ? { variants: icon.variants } : {}),
+        paths: pathCount,
+      },
+      undefined,
+      { cache: CACHE_SECONDS.LIST }
+    );
+  }
+
+  let query;
+  try {
+    query = parseIconQuery(searchParams);
+  } catch (e) {
+    return jsonError((e as Error).message, 400);
   }
 
   let customizedSvg: string;

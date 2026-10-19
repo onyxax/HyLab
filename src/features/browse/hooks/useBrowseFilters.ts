@@ -9,6 +9,10 @@ import { api, CategoryItem, SetItem } from '@/lib/api/client';
  * Deep hook — single owner for browse filtering.
  * يجمع: URL sync + category + source + search + pagination في مكان واحد.
  * تغيير الفلتر هنا لا يكسر صفحة أخرى.
+ *
+ * Order is stable by contract: /api/icons/categories and /api/icons/sets
+ * always return the base order and only update counts, so clicking a
+ * family/category never reshuffles the sidebar (no client-side re-sort).
  */
 export function useBrowseFilters(limit = 48) {
   const [sets, setSets] = useState<SetItem[]>([]);
@@ -24,7 +28,7 @@ export function useBrowseFilters(limit = 48) {
     api.icons.list({ limit: 1 }).then(d => setTotalAllIcons(d.meta?.total || 0)).catch(() => {});
   }, []);
 
-  // dynamic counts — تتغير حسب الفلتر الآخر
+  // dynamic counts — تتغير حسب الفلتر الآخر (order stays fixed by API contract)
   useEffect(() => {
     api.icons.categories({ set: source || undefined }).then(d => setCategories(d.data || [])).catch(() => {});
   }, [source]);

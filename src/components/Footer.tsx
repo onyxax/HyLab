@@ -10,10 +10,10 @@ export function Footer() {
             <Link href="/" className="inline-flex items-center gap-2.5">
               <img src="/favicon.svg" alt="HyLab" className="w-8 h-8 rounded-lg" />
               <span className="text-[16px] font-bold tracking-tight font-[family-name:var(--font-outfit)]">HyLab</span>
-              <span className="text-xs px-1.5 py-0.5 rounded bg-bg-card border border-border-primary text-text-muted font-mono">v1.0</span>
+              <span className="text-xs px-1.5 py-0.5 rounded bg-bg-card border border-border-primary text-text-muted font-mono">v2.1</span>
             </Link>
             <p className="text-sm leading-relaxed text-text-secondary mt-3 max-w-[36ch]">
-              The Icons API for modern apps — 18,039 icons from 10 families. One endpoint, any color, size, or format. Free and open source.
+              The Icons API for modern apps — 26,150 icons from 11 families. One endpoint, any color, size, or format. Free and open source.
             </p>
             <div className="mt-4 flex items-center gap-2">
               <a href="https://github.com/onyxax/HyLab" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-card border border-border-primary text-xs font-medium hover:border-border-hover transition-colors">

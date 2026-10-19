@@ -314,6 +314,146 @@ try {
   }
 } catch (e) { console.error('  Tabler error:', e.message); }
 
+// ─── SF Symbols (Apple) ──────────────────────────────
+// Source: @bradleyhodges/sfsymbols (dist/module/sf*.js).
+// Names are Apple canonical sourceNames (dots -> dashes) prefixed with sf-.
+// SVGs are fill-based to match phosphor-style icons and customizeSvg.
+console.log('Loading SF Symbols...');
+try {
+  const sfDir = path.join(__dirname, '..', 'node_modules', '@bradleyhodges', 'sfsymbols', 'dist', 'module');
+  const SF_CATEGORY_MAP = {
+    arrows: 'navigation',
+    automotive: 'navigation',
+    transportation: 'navigation',
+    maps: 'navigation',
+    home: 'navigation',
+    communication: 'communication',
+    commerce: 'commerce',
+    media: 'media',
+    camera__photos: 'media',
+    gaming: 'media',
+    shapes: 'layout',
+    objects__tools: 'layout',
+    editing: 'action',
+    text_formatting: 'action',
+    keyboard: 'action',
+    draw: 'action',
+    privacy__security: 'interface',
+    accessibility: 'interface',
+    devices: 'interface',
+    connectivity: 'interface',
+    human: 'social',
+    brands: 'social',
+    math: 'charts',
+    indicies: 'charts',
+    variable: 'charts',
+    time: 'miscellaneous',
+    weather: 'weather',
+    nature: 'miscellaneous',
+    health: 'status',
+    fitness: 'status',
+    whats_new: 'miscellaneous',
+  };
+  const SF_CATEGORY_PRIORITY = [
+    'home', 'maps', 'arrows', 'transportation', 'automotive',
+    'communication', 'commerce', 'camera__photos', 'gaming', 'media',
+    'editing', 'text_formatting', 'keyboard', 'draw',
+    'privacy__security', 'accessibility', 'devices', 'connectivity',
+    'objects__tools', 'human', 'brands', 'math', 'indicies', 'variable',
+    'shapes', 'weather', 'time', 'health', 'fitness', 'nature', 'whats_new',
+  ];
+  const sfRank = (c) => { const i = SF_CATEGORY_PRIORITY.indexOf(c); return i === -1 ? 999 : i; };
+  if (fs.existsSync(sfDir)) {
+    const files = fs.readdirSync(sfDir).filter(f => /^sf.*\.js$/.test(f)).sort();
+    // Pass 1 — load raw data (no naming decisions yet).
+    const raws = [];
+    for (const file of files) {
+      try {
+        const mod = require(path.join(sfDir, file));
+        const key = Object.keys(mod).find(k => k.startsWith('sf'));
+        const data = key ? mod[key] : null;
+        if (!data || !data.iconName || !data.sourceName || !data.svgPathData || !data.svgPathData.length || !data.viewBox) continue;
+        raws.push({ iconName: data.iconName, data });
+      } catch (e) {}
+    }
+    // Pass 2 — collision-safe unique names. Nothing is dropped:
+    // first keeps sf-<source>, later ones fall back to the package
+    // iconName (e.g. sfBrand11ty -> sf-brand-11ty), then -2/-3.
+    const taken = new Set();
+    const iconNameToName = new Map();
+    const assigned = [];
+    const toKebab = (s) => String(s).toLowerCase().replace(/\./g, '-').replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+    for (const raw of raws) {
+      const base = `sf-${toKebab(raw.data.sourceName)}`;
+      let name = base;
+      if (taken.has(name)) {
+        name = `sf-${toKebab(raw.iconName.replace(/^sf/i, ''))}`;
+        let n = 2;
+        while (taken.has(name)) name = `${base}-${n++}`;
+      }
+      taken.add(name);
+      iconNameToName.set(raw.iconName, name);
+      assigned.push({ raw, name });
+    }
+    // Pass 3 — build entries (variants resolved in pass 4).
+    const sfEntries = [];
+    for (const { raw, name } of assigned) {
+      const data = raw.data;
+      try {
+        const kebab = toKebab(data.sourceName);
+        const sfCats = Array.isArray(data.categories) ? data.categories : [];
+        const ordered = [...sfCats].sort((a, b) => sfRank(a) - sfRank(b));
+        let category = 'miscellaneous';
+        for (const c of ordered) {
+          if (SF_CATEGORY_MAP[c]) { category = SF_CATEGORY_MAP[c]; break; }
+        }
+        if (category === 'miscellaneous') category = categorize(name);
+        const tagSet = new Set();
+        for (const part of name.split('-')) { if (part.length > 1) tagSet.add(part); }
+        for (const c of sfCats) { const t = String(c).replace(/__/g, ' ').toLowerCase(); if (t.length > 1) tagSet.add(t); }
+        if (Array.isArray(data.keywords)) for (const k of data.keywords) { const t = String(k).toLowerCase(); if (t.length > 1) tagSet.add(t); }
+        if (data.style) tagSet.add(String(data.style).toLowerCase());
+        const paths = data.svgPathData.map(p => `  <path d="${p.d}" fill="currentColor"${p.fillOpacity !== undefined && p.fillOpacity < 1 ? ` fill-opacity="${p.fillOpacity}"` : ''} />`).join('\n');
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${data.viewBox}" fill="currentColor">\n${paths}\n</svg>`;
+        const pkgVariants = [...new Set(
+          Object.values(data.variants || {}).map(v => iconNameToName.get(String(v))).filter(v => v && v !== name)
+        )];
+        sfEntries.push({ raw, name, category, tags: [...tagSet].slice(0, 8), svg, pkgVariants });
+      } catch (e) {}
+    }
+    // Pass 4 — folder grouping: family base (sf-04-square-fill -> sf-04)
+    // plus byte-identical SVGs (brand duplicates like sf-11ty/sf-brand11ty).
+    const baseOf = (n) => {
+      const stripped = n.replace(/(?:-(?:circle-fill|square-fill|circle|square|slash|fill))+$/, '');
+      if (stripped && stripped !== 'sf') return stripped;
+      const m = n.match(/^sf-((?:circle|square|slash|fill))(?:-|$)/);
+      return m ? `sf-${m[1]}` : n;
+    };
+    const byBase = new Map();
+    for (const e of sfEntries) {
+      const b = baseOf(e.name);
+      if (!byBase.has(b)) byBase.set(b, []);
+      byBase.get(b).push(e.name);
+    }
+    const bySvg = new Map();
+    for (const e of sfEntries) {
+      if (!bySvg.has(e.svg)) bySvg.set(e.svg, []);
+      bySvg.get(e.svg).push(e.name);
+    }
+    let count = 0;
+    for (const e of sfEntries) {
+      const family = (byBase.get(baseOf(e.name)) || []).filter(n => n !== e.name);
+      const identical = (bySvg.get(e.svg) || []).filter(n => n !== e.name);
+      const variants = [...new Set([...e.pkgVariants, ...family, ...identical])].sort();
+      addIcon({ name: e.name, category: e.category, tags: e.tags, svg: e.svg, source: 'sfsymbols', ...(variants.length ? { variants } : {}) });
+      count++;
+    }
+    console.log(`  SF Symbols: ${count} icons found`);
+  } else {
+    console.log('  SF Symbols: package not found, skipping (npm install @bradleyhodges/sfsymbols)');
+  }
+} catch (e) { console.error('  SF Symbols error:', e.message); }
+
 // ─── Save ────────────────────────────────────────────
 console.log(`\nTotal icons: ${allIcons.length} (added ${added} new)`);
 fs.writeFileSync(DATA_PATH, JSON.stringify(allIcons, null, 2));

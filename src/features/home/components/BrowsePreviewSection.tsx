@@ -27,14 +27,14 @@ export function BrowsePreviewSection() {
           <div>
             <div className="text-[11px] tracking-[0.08em] uppercase font-semibold text-text-muted mb-2">Catalog</div>
             <h2 className="text-[28px] md:text-[32px] font-bold tracking-[-0.02em] leading-none font-[family-name:var(--font-outfit)]">Browse icons</h2>
-            <p className="text-sm text-text-secondary mt-2">Click any icon to copy its URL — 36 shown, 18k available.</p>
+            <p className="text-sm text-text-secondary mt-2">Click any icon to copy its URL — 36 shown, 25k available.</p>
           </div>
           <div className="flex items-center gap-3 w-full lg:w-auto">
             <div className="relative flex-1 lg:w-[360px]">
               <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               <input
                 type="text"
-                placeholder="Search 18,000+ icons…"
+                placeholder="Search 25,000+ icons…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 h-10 rounded-full border border-border-primary bg-bg-card text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/15 transition-all"
@@ -60,7 +60,7 @@ export function BrowsePreviewSection() {
         </div>
         <div className="mt-3 flex items-center justify-between text-xs text-text-muted">
           <span>Click any icon to copy its API URL</span>
-          <Link href="/browse" className="font-medium text-accent hover:text-accent-hover">Browse 18,039 →</Link>
+          <Link href="/browse" className="font-medium text-accent hover:text-accent-hover">Browse 26,150 →</Link>
         </div>
       </div>
     </section>

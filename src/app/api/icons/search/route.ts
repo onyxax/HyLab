@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
       tags: icon.tags,
       svg: icon.svg,
       source: icon.source,
+      ...(icon.variants?.length ? { variants: icon.variants } : {}),
     })),
     { total: results.length, query, category, source },
     { cache: CACHE_SECONDS.LIST }

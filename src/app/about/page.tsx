@@ -25,7 +25,7 @@ export default function AboutPage() {
               <span className="block text-text-muted font-medium">for everyone.</span>
             </h1>
             <p className="text-[17px] leading-relaxed text-text-secondary max-w-[48ch] mt-4 text-pretty">
-              HyLab curates <span className="font-medium text-text-primary">18,039</span> professional icons from the best open-source libraries and serves them through a single, fast API — no auth, no limits.
+              HyLab curates <span className="font-medium text-text-primary">26,150</span> professional icons from the best open-source libraries and serves them through a single, fast API — no auth, no limits.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/browse" className="btn btn-primary h-9 px-5 text-sm">Browse Icons</Link>
@@ -41,13 +41,13 @@ export default function AboutPage() {
             <div className="rounded-2xl border border-border-primary bg-bg-card overflow-hidden">
               <div className="px-5 py-4 border-b border-border-primary bg-bg-secondary flex items-center justify-between">
                 <span className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted">Manifesto</span>
-                <span className="text-xs tabular text-text-muted">v1.0 · MIT</span>
+                <span className="text-xs tabular text-text-muted">v2.1 · MIT</span>
               </div>
               <div className="p-5 space-y-4 text-sm leading-relaxed text-text-secondary">
                 <p><span className="font-medium text-text-primary">Icons shouldn’t be hard.</span> No signup, no API key, no rate limits.</p>
-                <p>One endpoint for 10 sources — customize with <code className="px-1.5 py-0.5 rounded bg-bg-secondary border border-border-primary font-mono text-xs">?color=&size=&format=</code> and ship.</p>
+                <p>One endpoint for 11 sources — customize with <code className="px-1.5 py-0.5 rounded bg-bg-secondary border border-border-primary font-mono text-xs">?color=&size=&format=</code> and ship.</p>
                 <div className="pt-4 border-t border-border-primary grid grid-cols-3 gap-4 text-center">
-                  <div><div className="text-lg font-bold tabular">18,039</div><div className="text-[11px] uppercase tracking-wide text-text-muted">Icons</div></div>
+                  <div><div className="text-lg font-bold tabular">26,150</div><div className="text-[11px] uppercase tracking-wide text-text-muted">Icons</div></div>
                   <div className="border-l border-border-primary"><div className="text-lg font-bold tabular">3</div><div className="text-[11px] uppercase tracking-wide text-text-muted">Formats</div></div>
                   <div className="border-l border-border-primary"><div className="text-lg font-bold tabular">100%</div><div className="text-[11px] uppercase tracking-wide text-text-muted">Free</div></div>
                 </div>

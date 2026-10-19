@@ -8,9 +8,10 @@ export interface IconCardData {
   tags: string[];
   svg: string;
   source?: string;
+  variants?: string[];
 }
 
-function normalizeForGrid(svg: string): string {
+export function normalizeForGrid(svg: string): string {
   // للأيقونات بدون currentColor (مثل carbon المعبأة) — وحد اللون ليظهر مثل البقية في الشبكة
   if (!svg.toLowerCase().includes('currentcolor')) {
     if (!/fill\s*=/.test(svg)) {

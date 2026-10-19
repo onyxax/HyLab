@@ -57,11 +57,11 @@ export default function DocsPage() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border-primary bg-bg-card px-2.5 py-1 text-[11px] font-medium tracking-[0.06em] uppercase text-text-muted">API v1.0</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border-primary bg-bg-card px-2.5 py-1 text-[11px] font-medium tracking-[0.06em] uppercase text-text-muted">API v2.1</span>
                 <span className="text-xs text-text-muted">No auth · CORS enabled · Edge cached</span>
               </div>
               <h1 className="text-[32px] md:text-[40px] font-bold tracking-[-0.025em] leading-none font-[family-name:var(--font-outfit)]">Documentation</h1>
-              <p className="text-sm text-text-secondary mt-2 max-w-[52ch]">Everything to integrate 18,039 icons — one endpoint, any color, size, or format. Copy, paste, ship.</p>
+              <p className="text-sm text-text-secondary mt-2 max-w-[52ch]">Everything to integrate 26,150 icons — one endpoint, any color, size, or format. Copy, paste, ship.</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-xs tabular text-text-muted">Base URL</span>
@@ -126,7 +126,7 @@ export default function DocsPage() {
 
           <section id="sets" className="scroll-mt-24">
             <div className="flex items-baseline gap-3 mb-6"><span className="text-[11px] tracking-[0.08em] uppercase font-semibold text-text-muted">05</span><h2 className="text-xl font-bold tracking-tight">Icon sets & categories</h2><span className="h-px flex-1 bg-border-primary ml-4 hidden sm:block" /></div>
-            <div className="rounded-xl border border-border-primary bg-bg-card p-4"><div className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted mb-3">Sources — 10 libraries, 18,039 icons</div><div className="grid sm:grid-cols-2 gap-2">{iconSets.map(s => (<div key={s.name} className="flex items-center justify-between rounded-lg border border-border-primary bg-bg-secondary/50 px-3 py-2.5"><div><div className="text-sm font-medium">{s.name}</div><div className="text-xs text-text-muted">{s.desc}</div></div><span className="text-xs font-mono tabular font-medium text-text-primary">{s.count}</span></div>))}</div></div>
+            <div className="rounded-xl border border-border-primary bg-bg-card p-4"><div className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted mb-3">Sources — 11 libraries, 26,150 icons</div><div className="grid sm:grid-cols-2 gap-2">{iconSets.map(s => (<div key={s.name} className="flex items-center justify-between rounded-lg border border-border-primary bg-bg-secondary/50 px-3 py-2.5"><div><div className="text-sm font-medium">{s.name}</div><div className="text-xs text-text-muted">{s.desc}</div></div><span className="text-xs font-mono tabular font-medium text-text-primary">{s.count}</span></div>))}</div></div>
             {categories.length > 0 && <div className="mt-4 rounded-xl border border-border-primary bg-bg-card p-4"><div className="text-xs font-semibold tracking-[0.06em] uppercase text-text-muted mb-3">Categories</div><div className="grid sm:grid-cols-2 gap-2">{categories.map((c: any) => (<div key={c.id} className="flex items-center justify-between rounded-lg border border-border-primary px-3 py-2 text-sm"><span>{c.name}</span><span className="text-xs tabular text-text-muted">{c.count}</span></div>))}</div></div>}
           </section>
 
@@ -144,7 +144,7 @@ GET /api/icons/search?q=arrow
 GET /api/icons/categories?set=tabler
 GET /api/icons/sets?category=navigation
 
-Families (10): tabler (5093), remix (3229), carbon (2665), lucide (1582), phosphor (1512), iconoir (1383), boxicons (814), octicons (733), cssgg (704), heroicons (324)
+Families (11): sfsymbols (8111), tabler (5093), remix (3229), carbon (2665), lucide (1582), phosphor (1512), iconoir (1383), boxicons (814), octicons (733), cssgg (704), heroicons (324)
 Categories: navigation, action, communication, social, files, media, interface, status, commerce, charts, layout, development, weather, miscellaneous
 
 Browse: /browse?set=tabler or /browse?set=tabler&category=navigation — shareable URL
@@ -167,7 +167,7 @@ GET /api/icons/search?q=arrow
 GET /api/icons/categories?set=tabler
 GET /api/icons/sets?category=navigation
 
-Families (10): tabler (5093), remix (3229), carbon (2665), lucide (1582), phosphor (1512), iconoir (1383), boxicons (814), octicons (733), cssgg (704), heroicons (324)
+Families (11): sfsymbols (8111), tabler (5093), remix (3229), carbon (2665), lucide (1582), phosphor (1512), iconoir (1383), boxicons (814), octicons (733), cssgg (704), heroicons (324)
 Categories: navigation, action, communication, social, files, media, interface, status, commerce, charts, layout, development, weather, miscellaneous
 
 Browse: /browse?set=tabler or /browse?set=tabler&category=navigation — shareable URL

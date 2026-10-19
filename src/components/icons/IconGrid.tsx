@@ -1,6 +1,8 @@
 'use client';
 
-import { IconCard, IconCardData } from './IconCard';
+import { IconCard, IconCardData, normalizeForGrid } from './IconCard';
+import { IconFolderCard } from './IconFolderCard';
+import { groupGridEntries, GridEntry } from './folders';
 
 type GridVariant = 'default' | 'compact' | 'browse';
 
@@ -47,6 +49,7 @@ export function IconGrid({
   onCopy,
   skeletonCount = 48,
   variant = 'default',
+  familyMode = false,
 }: {
   icons: IconCardData[];
   loading: boolean;
@@ -56,21 +59,95 @@ export function IconGrid({
   onCopy?: (name: string) => void;
   skeletonCount?: number;
   variant?: GridVariant;
+  /** Family rows (one row per folder with members inline) — for
+   *  folder-dominated sets like SF Symbols so the view feels dense. */
+  familyMode?: boolean;
 }) {
   if (loading) return <IconGridSkeleton count={skeletonCount} variant={variant} />;
   if (icons.length === 0) return <IconGridEmpty />;
+  const entries = groupGridEntries(icons);
+  if (familyMode) return <FamilyRows entries={entries} selectedName={selectedName} onSelect={onSelect} />;
   return (
     <div className={GRID_CLASSES[variant]}>
-      {icons.map((icon, i) => (
-        <IconCard
-          key={`${icon.name}-${i}`}
-          icon={icon}
-          selected={selectedName === icon.name}
-          copied={copiedName === icon.name}
-          onSelect={onSelect}
-          onCopy={onCopy}
-        />
-      ))}
+      {entries.map(entry =>
+        entry.kind === 'folder' ? (
+          <IconFolderCard
+            key={entry.key}
+            label={entry.label}
+            members={entry.members}
+            selected={selectedName != null && entry.members.some(m => m.name === selectedName)}
+            copied={copiedName != null && entry.members.some(m => m.name === copiedName)}
+            onOpen={onSelect ? icon => onSelect(icon) : onCopy ? () => onCopy(entry.members[0].name) : undefined}
+          />
+        ) : (
+          <IconCard
+            key={`${entry.icon.name}`}
+            icon={entry.icon}
+            selected={selectedName === entry.icon.name}
+            copied={copiedName === entry.icon.name}
+            onSelect={onSelect}
+            onCopy={onCopy}
+          />
+        )
+      )}
+    </div>
+  );
+}
+
+/**
+ * Family rows — one dense row per folder: family name + count on the
+ * left, every member directly clickable on the right. Built for
+ * folder-dominated sets (SF Symbols) so the page feels full instead
+ * of a sparse folder grid.
+ */
+function FamilyRows({
+  entries,
+  selectedName,
+  onSelect,
+}: {
+  entries: GridEntry[];
+  selectedName?: string | null;
+  onSelect?: (icon: IconCardData) => void;
+}) {
+  return (
+    <div className="divide-y divide-border-primary/70">
+      {entries.map(entry => {
+        const members = entry.kind === 'folder' ? entry.members : [entry.icon];
+        const key = entry.kind === 'folder' ? entry.key : `single-${entry.icon.name}`;
+        const label = entry.kind === 'folder' ? entry.label : entry.icon.name;
+        return (
+          <div key={key} className="flex items-center gap-3 py-2 first:pt-1 last:pb-1">
+            <div className="w-28 sm:w-36 shrink-0 min-w-0">
+              <div className="truncate text-[13px] font-semibold text-text-primary" title={members.map(m => m.name).join(', ')}>
+                {label}
+              </div>
+              <div className="tabular text-[11px] text-text-muted">
+                {members.length > 1 ? `${members.length} variants` : 'single'}
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-1.5 flex-wrap min-w-0">
+              {members.map(m => {
+                const selected = selectedName === m.name;
+                return (
+                  <button
+                    key={m.name}
+                    onClick={() => onSelect?.(m)}
+                    aria-label={m.name}
+                    title={m.name}
+                    aria-pressed={selected}
+                    className={`w-11 h-11 shrink-0 rounded-xl border p-2 block transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                      selected
+                        ? 'border-accent bg-accent-light ring-1 ring-accent/30 text-accent'
+                        : 'border-border-primary bg-bg-card text-text-secondary hover:text-text-primary hover:border-accent'
+                    } [&_svg]:w-full [&_svg]:h-full`}
+                    dangerouslySetInnerHTML={{ __html: normalizeForGrid(m.svg) }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

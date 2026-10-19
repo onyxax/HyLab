@@ -19,5 +19,11 @@
       ]
     }
   ],
-  "rewrites": []
+  "rewrites": [],
+  "crons": [
+    {
+      "path": "/api/cron/probe",
+      "schedule": "0 3 * * *"
+    }
+  ]
 }

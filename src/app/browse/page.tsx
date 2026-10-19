@@ -27,7 +27,7 @@ export default function BrowsePage() {
       <BrowseHeader totalAllIcons={totalAllIcons} categoriesCount={categories.length} setsCount={sets.length} search={search} setSearch={setSearch} />
 
       <section className="py-4 px-6">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[400px_1fr] gap-5 items-start">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[320px_1fr] gap-5 items-start">
           <DesktopFilters categories={categories} sets={sets} category={category} source={source} setCategory={setCategory} setSource={setSource} totalAllIcons={totalAllIcons} />
 
           <div className="min-w-0">
@@ -35,7 +35,7 @@ export default function BrowsePage() {
             <BrowseToolbar loading={loading} search={search} category={category} source={source} total={total} page={page} totalPages={totalPages} categories={categories} onClear={() => { setCategory(null); setSource(null); setSearch(''); }} />
 
             <div className="rounded-2xl border border-border-primary bg-bg-card p-4 md:p-5">
-              <IconGrid icons={icons as IconCardData[]} loading={loading} selectedName={selectedIcon?.name ?? null} onSelect={setSelectedIcon} />
+              <IconGrid icons={icons as IconCardData[]} loading={loading} selectedName={selectedIcon?.name ?? null} onSelect={setSelectedIcon} familyMode={source === 'sfsymbols'} />
             </div>
 
             {!loading && icons.length > 0 && totalPages > 1 && !search.trim() && (
@@ -52,7 +52,7 @@ export default function BrowsePage() {
         </div>
       </section>
 
-      <IconPreviewModal icon={selectedIcon} onClose={() => setSelectedIcon(null)} />
+      <IconPreviewModal icon={selectedIcon} onClose={() => setSelectedIcon(null)} onNavigate={setSelectedIcon} />
       <Footer />
     </div>
   );

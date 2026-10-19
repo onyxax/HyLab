@@ -15,6 +15,7 @@ export type IconListItem = {
   tags: string[];
   svg: string;
   source?: string;
+  variants?: string[];
 };
 
 export type CategoryItem = { id: string; name: string; count: number };
@@ -66,6 +67,12 @@ export const api = {
       const res = await fetch(`/api/icons/${name}${qs ? `?${qs}` : ''}`);
       if (!res.ok) throw new Error(`Icon "${name}" not found`);
       return res;
+    },
+    meta: async (name: string) => {
+      const data = await fetchJson<{ success: boolean; data: IconListItem & { paths?: number } }>(
+        `/api/icons/${encodeURIComponent(name)}?format=json`
+      );
+      return data;
     },
     categories: async (opts?: { set?: string; source?: string }) => {
       const sp = new URLSearchParams();
